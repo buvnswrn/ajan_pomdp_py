@@ -19,10 +19,10 @@ def get_state(state, pomdp_id=None):
     if pomdp_id is None:
         pomdp_id = state.pomdp_id
     if state.state.type.lower() == "agent":
-        agent = AjanAgent(state.state.id, attributes=state.state.attributes, to_print=state.state.to_print)
+        agent = AjanAgent(state.state.id, attributes=state.state.params.attributes, to_print=state.state.params.to_print)
     elif state.state.type.lower() == "env":
-        agent = AjanEnvObjectState(state.state.name, state.state.id, attributes=state.state.attributes,
-                                   to_print=state.state.to_print)
+        agent = AjanEnvObjectState(state.state.name, state.state.id, attributes=state.state.params.attributes,
+                                   to_print=state.state.params.to_print)
     else:
         agent = None
     if agent is not None:

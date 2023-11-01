@@ -6,6 +6,7 @@ pomdp_ns = APIRouter(prefix="/AJAN/pomdp")
 
 states = {}
 actions = {}
+observations = {}
 init_beliefs = {}
 
 

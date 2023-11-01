@@ -2,11 +2,25 @@ from pydantic import BaseModel
 from typing import Dict, Optional, Tuple, List
 
 
+class Attributes(BaseModel):
+    attributes: dict = None
+    to_print: list = None
+
+
+class ProbabilisticModelsData(BaseModel):
+    params: Attributes = None
+    data: str
+    probability_query: str = None
+    sample_query: str = None
+    argmax_query: str = None
+    rollout_query: str = None
+    get_all_action_query: str = None
+
+
 class State(BaseModel):
     id: int
     name: str = None
-    attributes: dict = None
-    to_print: list = None
+    params: Attributes = None
     type: str = None
 
 
@@ -57,3 +71,8 @@ class BeliefInit(BaseModel):
     pomdp_id: int
     representation: str
     belief_dict: List[BeliefPrior]  # pomdp_id
+
+
+class BeliefInitKB(BaseModel):
+    pomdp_id: int
+    repo_url: str
