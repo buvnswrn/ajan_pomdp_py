@@ -1,25 +1,10 @@
 from fastapi import APIRouter, HTTPException
-from .VariableModels.State import StateInit, POMDPInit, BeliefInit, List, BeliefPrior
-from .VariableModels.ResponseModels import CreateResponse
-from .ajan_pomdp_planning.oopomdp.agent.belief import initialize_belief
-from .ajan_pomdp_planning.oopomdp.domain.state import AjanAgent, AjanEnvObjectState, AjanOOState
-from .ajan_pomdp_planning.oopomdp.domain.action import AjanAction
+from ..VariableModels.ResponseModels import CreateResponse
+from ..VariableModels.State import StateInit, POMDPInit
+from ..ajan_pomdp_planning.oopomdp.domain.state import AjanAgent, AjanEnvObjectState, AjanOOState
+from .pomdp import states
 
-pomdp_ns = APIRouter(prefix="/AJAN/pomdp")
 state_ns = APIRouter(prefix="/AJAN/pomdp/state")
-action_ns = APIRouter(prefix="/AJAN/pomdp/action")
-belief_ns = APIRouter(prefix="/AJAN/pomdp/belief")
-
-states = {}
-actions = {}
-init_beliefs = {}
-
-
-@pomdp_ns.post("/initialize")
-def initialize(pomdp: POMDPInit):
-    states[pomdp.pomdp_id] = {}
-    actions[pomdp.pomdp_id] = []
-    init_beliefs[pomdp.pomdp_id] = {}
 
 
 @state_ns.post("/create/agent", summary="Create an Agent state",
@@ -30,7 +15,7 @@ def create(state: StateInit):
     return {"name": str(agent), "message": "Agent Creation Successful"}
 
 
-def get_state(state, pomdp_id = None):
+def get_state(state, pomdp_id=None):
     if pomdp_id is None:
         pomdp_id = state.pomdp_id
     if state.state.type.lower() == "agent":
@@ -41,7 +26,7 @@ def get_state(state, pomdp_id = None):
     else:
         agent = None
     if agent is not None:
-        if not states.keys().__contains__(state.state.id):
+        if not states[pomdp_id].keys().__contains__(state.state.id):
             states[pomdp_id][state.state.id] = agent
         else:
             raise HTTPException(status_code=406, detail="State ID is already used")
@@ -75,36 +60,3 @@ def initialize(pomdp: POMDPInit):
         raise HTTPException(status_code=406, detail="POMDP ID is invalid. "
                                                     "Initialize POMDP for ID:%s and create states before proceeding "
                                                     "with Object Oriented POMDP state initialization")
-
-
-@action_ns.post("/create/action", summary="Create an Action", response_model=CreateResponse)
-def create(pomdp_id: int, name: str, attributes: dict):
-    action = AjanAction(name, attributes)
-    if not actions[pomdp_id].__contains__(name):
-        actions[pomdp_id].append(action)
-    else:
-        raise HTTPException(status_code=406, detail="Action is already created")
-    print("Created:", action.__repr__())
-    return {"name": action.__repr__(), "message": "Action Successfully created"}
-
-
-@belief_ns.post("/create/init-belief", summary="Create the initial belief", response_model=CreateResponse)
-def init_belief(belief_dict: BeliefInit):
-    belief_states = convert_to_states(belief_dict.pomdp_id, belief_dict.belief_dict)
-    belief = initialize_belief(belief_dict.pomdp_id, belief_states, belief_dict.representation)
-    init_beliefs[belief_dict.pomdp_id] = belief
-    return {"name": str(belief), "message": "Initial Belief created successfully"}
-
-
-def convert_to_states(p_id: int, belief_dict: List[BeliefPrior]):
-    init_belief_dict = {}
-    state_prob = {}
-    for prior in belief_dict:
-        agent_state = get_state(prior, p_id)
-        if not init_belief_dict.keys().__contains__(p_id):
-            init_belief_dict[p_id] = {}
-        if not init_belief_dict[p_id].keys().__contains__(agent_state.objclass):
-            init_belief_dict[p_id][agent_state.objclass] = {}
-        state_prob[agent_state] = prior.probability
-        init_belief_dict[p_id][agent_state.objclass].update(state_prob)
-    return init_belief_dict  # { 0: {'drone': {state1:prob} } }
