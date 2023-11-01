@@ -1,4 +1,5 @@
 import pomdp_py
+from rdflib import Graph
 
 
 class AjanAgent(pomdp_py.ObjectState):
@@ -6,6 +7,7 @@ class AjanAgent(pomdp_py.ObjectState):
         if to_print is None:
             to_print = ['id']
         self.to_print = frozenset(to_print)
+        self.graph = Graph()
         if attributes is not None:
             attributes = {**attributes, **{"id": agent_id}}
         else:
@@ -29,6 +31,7 @@ class AjanEnvObjectState(pomdp_py.ObjectState):
         if to_print is None:
             to_print = ['id']
         self.to_print = frozenset(to_print)
+        self.graph = Graph()
         if attributes is not None:
             attributes = {**attributes, **{"id": obj_id}}
         else:

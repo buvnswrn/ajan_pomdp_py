@@ -1,10 +1,12 @@
 import pomdp_py
+from rdflib import Graph
 
 
 class AjanAction(pomdp_py.Action):
     def __init__(self, name, attributes=None):
         self.name = name
         self.attributes = attributes
+        self.graph = Graph()
 
     def __hash__(self):
         return hash(self.name)
