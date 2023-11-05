@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
-from .pomdp import actions
-from ..ajan_pomdp_planning.oopomdp.domain.action import AjanAction
-from ..VariableModels.ResponseModels import CreateResponse
+from POMDPService.interface.pomdp import actions
+from POMDPService.ajan_pomdp_planning.oopomdp.domain.action import AjanAction
+from POMDPService.VariableModels.ResponseModels import CreateResponse
 
 action_ns = APIRouter(prefix="/AJAN/pomdp/action")
 

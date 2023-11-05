@@ -25,15 +25,15 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
         if self.sample_query == "argmax":
             return self.argmax(state, action)
         out = self.parse_query(self.sample_query, state, action)
-        return self.convert_to_observation(out.sample)
+        return self.convert_to_states(out.sample)
 
     def argmax(self, state, action):
         if self.argmax_query == "sample":
             return self.sample(state, action)
         out = self.parse_query(self.argmax_query, state, action)
-        return self.convert_to_observation(out.argmax)
+        return self.convert_to_states(out.argmax)
 
-    def convert_to_observation(self, sample):
+    def convert_to_states(self, sample):
         pass  # parse the node and convert it to AjanObservation
 
     def parse_query(self, query, next_state, action):

@@ -1,7 +1,7 @@
 from fastapi import APIRouter
-from ..VariableModels.ResponseModels import CreateResponse
-from ..VariableModels.State import Attributes, ProbabilisticModelsData
-from ..ajan_pomdp_planning.oopomdp.models.observation_model import AjanObservationModel
+from POMDPService.VariableModels.ResponseModels import CreateResponse
+from POMDPService.VariableModels.State import Attributes, ProbabilisticModelsData
+from POMDPService.ajan_pomdp_planning.oopomdp.models.observation_model import AjanObservationModel
 
 obs_model_ns = APIRouter(prefix="/AJAN/pomdp/observation_model")
 

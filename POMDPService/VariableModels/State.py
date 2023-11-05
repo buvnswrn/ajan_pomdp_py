@@ -73,6 +73,31 @@ class BeliefInit(BaseModel):
     belief_dict: List[BeliefPrior]  # pomdp_id
 
 
+class AgentInit(BaseModel):
+    data: str
+    init_belief: int
+    policy_model: int
+    transition_model: int
+    observation_model: int
+    reward_model: int
+
+
+class EnvInit(BaseModel):
+    pomdp_id: int
+    data: str
+    init_state: int
+    transition_model: int
+    reward_model: int
+
+
+class POMDPProblemInit(BaseModel):
+    pomdp_id: int
+    name: str
+    init_state: int
+    agent: int
+    env: int
+
+
 class BeliefInitKB(BaseModel):
     pomdp_id: int
     repo_url: str

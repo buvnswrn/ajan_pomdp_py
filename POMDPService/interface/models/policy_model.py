@@ -1,7 +1,7 @@
 from fastapi import APIRouter
-from ..VariableModels.ResponseModels import CreateResponse
-from ..VariableModels.State import Attributes, ProbabilisticModelsData
-from ..ajan_pomdp_planning.oopomdp.models.policy_model import AjanPolicyModel
+from POMDPService.VariableModels.ResponseModels import CreateResponse
+from POMDPService.VariableModels.State import Attributes, ProbabilisticModelsData
+from POMDPService.ajan_pomdp_planning.oopomdp.models.policy_model import AjanPolicyModel
 
 policy_model_ns = APIRouter(prefix="/AJAN/pomdp/policy_model")
 

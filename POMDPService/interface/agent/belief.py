@@ -1,9 +1,9 @@
 from fastapi import APIRouter
-from ..VariableModels.State import BeliefInit, List, BeliefPrior, BeliefInitKB
-from ..VariableModels.ResponseModels import CreateResponse
-from ..ajan_pomdp_planning.oopomdp.agent.belief import initialize_belief
-from .pomdp import init_beliefs
-from .state import get_state
+from POMDPService.VariableModels.State import BeliefInit, List, BeliefPrior, BeliefInitKB
+from POMDPService.VariableModels.ResponseModels import CreateResponse
+from POMDPService.ajan_pomdp_planning.oopomdp.agent.belief import initialize_belief
+from POMDPService.interface.pomdp import init_beliefs
+from POMDPService.interface.domain.state import get_state
 
 from rdflib import Graph
 
