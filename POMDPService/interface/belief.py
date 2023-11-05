@@ -15,7 +15,7 @@ def init_belief(belief_dict: BeliefInit):
     belief_states = convert_to_states(belief_dict.pomdp_id, belief_dict.belief_dict)
     belief = initialize_belief(belief_dict.pomdp_id, belief_states, belief_dict.representation)
     init_beliefs[belief_dict.pomdp_id] = belief
-    return {"name": str(belief), "message": "Initial Belief created successfully"}
+    return {"name": str(belief), "message": "Initial Belief created successfully", "id": id(belief)}
 
 
 @belief_ns.post("/create/init-belief-from-knowledge-base",
@@ -23,7 +23,7 @@ def init_belief(belief_dict: BeliefInit):
 def init_belief(belief_data: BeliefInitKB):
     g = Graph()
     g.parse(belief_data.repo_url)
-    return {"name": "success", "message": "Initial Belief created"}
+    return {"name": "success", "message": "Initial Belief created", "id": id(g)}
 
 
 def convert_to_states(p_id: int, belief_dict: List[BeliefPrior]):

@@ -14,4 +14,4 @@ def init_model(model_data: ProbabilisticModelsData):
                             model_data.sample_query,
                             model_data.argmax_query)
     print(model)
-    return CreateResponse(name="Created", message="Reward Model Created")
+    return CreateResponse(name="Created", message="Reward Model Created", id=id(model))

@@ -14,4 +14,4 @@ def create(pomdp_id: int, name: str, attributes: dict):
     else:
         raise HTTPException(status_code=406, detail="Action is already created")
     print("Created:", action.__repr__())
-    return {"name": action.__repr__(), "message": "Action Successfully created"}
+    return {"name": action.__repr__(), "message": "Action Successfully created", "id": id(action)}

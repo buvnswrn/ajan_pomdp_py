@@ -12,7 +12,7 @@ state_ns = APIRouter(prefix="/AJAN/pomdp/state")
 def create(state: StateInit):
     agent = get_state(state)
     print("Initialized:", agent)
-    return {"name": str(agent), "message": "Agent Creation Successful"}
+    return {"name": str(agent), "message": "Agent Creation Successful", "id": id(agent)}
 
 
 def get_state(state, pomdp_id=None):
@@ -45,7 +45,7 @@ def create(state: StateInit):
     else:
         raise HTTPException(status_code=406, detail="State ID is already used")
     print("Initialized:", env_obj)
-    return {"name": str(env_obj), "message": "Environment Object Created successfully"}
+    return {"name": str(env_obj), "message": "Environment Object Created successfully", "id": id(env_obj)}
 
 
 @state_ns.post("/initialize", summary="Initialize Object States",
@@ -55,7 +55,8 @@ def initialize(pomdp: POMDPInit):
     if states.keys().__contains__(pomdp.pomdp_id):
         _states = states[pomdp.pomdp_id]
         states[pomdp.pomdp_id] = AjanOOState(_states)
-        return {"name": str(states[pomdp.pomdp_id]), "message": "States Initialized successfully"}
+        return {"name": str(states[pomdp.pomdp_id]), "message": "States Initialized successfully",
+                "id": id(states[pomdp.pomdp_id])}
     else:
         raise HTTPException(status_code=406, detail="POMDP ID is invalid. "
                                                     "Initialize POMDP for ID:%s and create states before proceeding "
