@@ -2,7 +2,7 @@ import ctypes
 
 from fastapi import APIRouter
 from POMDPService.VariableModels.ResponseModels import CreateResponse
-from POMDPService.VariableModels.State import EnvInit
+from POMDPService.VariableModels.State import EnvInit, POMDPInit
 from POMDPService.ajan_pomdp_planning.oopomdp.env.env import AjanEnvironment
 from POMDPService.interface.pomdp import envs, init_states, models, problems, last_action, last_observation
 
@@ -20,7 +20,9 @@ def create_env(env_init: EnvInit):
 
 
 @env_ns.post("/create", summary="Create an Environment", response_model=CreateResponse)
-def create_env(pomdp_id: int, data: str):
+def create_env(env_init: EnvInit):
+    pomdp_id = env_init.pomdp_id
+    data =env_init.data
     init_state = init_states[pomdp_id]
     transition_model = models[pomdp_id]['env']['transition']
     reward_model = models[pomdp_id]['env']['reward']
@@ -30,7 +32,8 @@ def create_env(pomdp_id: int, data: str):
 
 
 @env_ns.post("/provide-observation", summary="Provide an observation", response_model=CreateResponse)
-def provide_observation(pomdp_id: int):
+def provide_observation(pomdp_id: POMDPInit):
+    pomdp_id = pomdp_id.pomdp_id
     problem = problems[pomdp_id]
     obs = problem.env.provide_observation(problem.agent.observation_model, last_action[pomdp_id])
     last_observation[pomdp_id] = obs
