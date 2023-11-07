@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from POMDPService.VariableModels.ResponseModels import CreateResponse
 from POMDPService.VariableModels.State import StateInit, POMDPInit
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanAgent, AjanEnvObjectState, AjanOOState
-from POMDPService.interface.pomdp import states
+from POMDPService.interface.pomdp import states, init_states
 
 state_ns = APIRouter(prefix="/AJAN/pomdp/state")
 
@@ -18,11 +18,17 @@ def create(state: StateInit):
 def get_state(state, pomdp_id=None):
     if pomdp_id is None:
         pomdp_id = state.pomdp_id
+    if state.state.params is None:
+        attributes = None
+        to_print = None
+    else:
+        attributes = state.state.params.attributes
+        to_print = state.state.params.to_print
     if state.state.type.lower() == "agent":
-        agent = AjanAgent(state.state.id, attributes=state.state.params.attributes, to_print=state.state.params.to_print)
+        agent = AjanAgent(state.state.id, attributes=attributes, to_print=to_print)
     elif state.state.type.lower() == "env":
-        agent = AjanEnvObjectState(state.state.name, state.state.id, attributes=state.state.params.attributes,
-                                   to_print=state.state.params.to_print)
+        agent = AjanEnvObjectState(state.state.name, state.state.id, attributes=attributes,
+                                   to_print=to_print)
     else:
         agent = None
     if agent is not None:
@@ -54,7 +60,7 @@ def create(state: StateInit):
 def initialize(pomdp: POMDPInit):
     if states.keys().__contains__(pomdp.pomdp_id):
         _states = states[pomdp.pomdp_id]
-        states[pomdp.pomdp_id] = AjanOOState(_states)
+        init_states[pomdp.pomdp_id] = AjanOOState(_states)
         return {"name": str(states[pomdp.pomdp_id]), "message": "States Initialized successfully",
                 "id": id(states[pomdp.pomdp_id])}
     else:
