@@ -78,19 +78,19 @@ class BeliefInit(BaseModel):
 class AgentInit(BaseModel):
     pomdp_id: int
     data: str
-    init_belief: int
-    policy_model: int
-    transition_model: int
-    observation_model: int
-    reward_model: int
+    init_belief: int = None
+    policy_model: int = None
+    transition_model: int = None
+    observation_model: int = None
+    reward_model: int = None
 
 
 class EnvInit(BaseModel):
     pomdp_id: int
     data: str
-    init_state: int
-    transition_model: int
-    reward_model: int
+    init_state: int = None
+    transition_model: int = None
+    reward_model: int = None
 
 
 class POMDPProblemInit(BaseModel):
