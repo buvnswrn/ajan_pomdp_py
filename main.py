@@ -6,6 +6,7 @@ from POMDPService.interface.models.observation_model import obs_model_ns
 from POMDPService.interface.models.policy_model import policy_model_ns
 from POMDPService.interface.models.reward_model import reward_model_ns
 from POMDPService.interface.models.transition_model import transition_model_ns
+from POMDPService.interface.planner.planner import planner_ns
 from POMDPService.interface.pomdp import pomdp_ns
 from POMDPService.interface.domain.state import state_ns
 from POMDPService.interface.domain.action import action_ns
@@ -26,6 +27,7 @@ app.include_router(belief_ns, tags=['Belief'])
 app.include_router(agent_ns, tags=['Agent'])
 app.include_router(env_ns, tags=['Environment'])
 app.include_router(problem_ns, tags=['Problem'])
+app.include_router(planner_ns, tags=['Planner'])
 
 app1 = FastAPI(title="AJAN-POMDP-State", description="API for planning with pomdp-py through AJAN1")
 app1.include_router(pomdp_ns, tags=['POMDP Service1'])

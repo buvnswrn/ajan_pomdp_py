@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from POMDPService.VariableModels.ResponseModels import CreateResponse
 from POMDPService.VariableModels.State import Attributes, ProbabilisticModelsData
 from POMDPService.ajan_pomdp_planning.oopomdp.models.policy_model import AjanPolicyModel
+from POMDPService.interface.pomdp import models
 
 policy_model_ns = APIRouter(prefix="/AJAN/pomdp/policy_model")
 
@@ -13,5 +14,6 @@ def init_model(model_data: ProbabilisticModelsData):
                             model_data.probability_query,
                             model_data.sample_query,
                             model_data.argmax_query)
+    models[model_data.pomdp_id]['agent']['policy'] = model
     print(model)
     return CreateResponse(name="Created", message="Policy Model Created", id=id(model))

@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from POMDPService.VariableModels.ResponseModels import CreateResponse
 from POMDPService.VariableModels.State import Attributes, ProbabilisticModelsData
 from POMDPService.ajan_pomdp_planning.oopomdp.models.transition_model import AjanTransitionModel
+from POMDPService.interface.pomdp import models
 
 transition_model_ns = APIRouter(prefix="/AJAN/pomdp/transition_model")
 
@@ -12,5 +13,6 @@ def init_model(model_data: ProbabilisticModelsData):
                                 model_data.probability_query,
                                 model_data.sample_query,
                                 model_data.argmax_query)
+    models[model_data.pomdp_id][model_data.type]['transition'] = model
     print(model)
     return CreateResponse(name="Created", message="Transition Model Created", id=id(model))

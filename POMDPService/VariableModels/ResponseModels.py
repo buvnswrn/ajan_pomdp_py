@@ -6,3 +6,8 @@ class CreateResponse(BaseModel):
     name: str
     id: int = None
     message: str = None
+
+
+class BooleanResponse(BaseModel):
+    success: bool
+    message: str = None

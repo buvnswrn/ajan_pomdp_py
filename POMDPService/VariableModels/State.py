@@ -8,6 +8,8 @@ class Attributes(BaseModel):
 
 
 class ProbabilisticModelsData(BaseModel):
+    pomdp_id: int
+    type: str = None
     params: Attributes = None
     data: str
     probability_query: str = None
@@ -74,6 +76,7 @@ class BeliefInit(BaseModel):
 
 
 class AgentInit(BaseModel):
+    pomdp_id: int
     data: str
     init_belief: int
     policy_model: int
@@ -93,9 +96,22 @@ class EnvInit(BaseModel):
 class POMDPProblemInit(BaseModel):
     pomdp_id: int
     name: str
-    init_state: int
-    agent: int
-    env: int
+    data: str
+    agent: int = None
+    env: int = None
+
+
+class PlannerInit(BaseModel):
+    pomdp_id: int
+    name: str
+    policy_model: int = None
+    max_depth: int = 10
+    planning_time: float = -1.
+    num_sims: int = -1
+    exploration_const: int = 1000
+    max_steps: int = 500
+    discount_factor: float = 0.95
+    pbar_update_interval: int = 500
 
 
 class BeliefInitKB(BaseModel):
