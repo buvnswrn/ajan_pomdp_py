@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ajanpomdp
+  labels:
+    app: ajanpomdp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ajanpomdp
+  template:
+    metadata:
+      name: ajanpomdp
+      labels:
+        app: ajanpomdp
+    spec:
+      containers:
+        - name: ajanpomdp
+          image: ajan-pomdp:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+      restartPolicy: Always
+      
