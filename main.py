@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from POMDPService.interface.agent.agent import agent_ns
 from POMDPService.interface.domain.observation import obs_ns
+from POMDPService.interface.models.model import model_ns
 from POMDPService.interface.models.observation_model import obs_model_ns
 from POMDPService.interface.models.policy_model import policy_model_ns
 from POMDPService.interface.models.reward_model import reward_model_ns
@@ -20,6 +21,7 @@ app.include_router(state_ns, tags=['State'])
 app.include_router(action_ns, tags=['Action'])
 app.include_router(obs_ns, tags=['Observation'])
 app.include_router(obs_model_ns, tags=['Models'])
+app.include_router(model_ns, tags=['Models'])
 app.include_router(transition_model_ns, tags=['Models'])
 app.include_router(reward_model_ns, tags=['Models'])
 app.include_router(policy_model_ns, tags=['Models'])
