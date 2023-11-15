@@ -11,9 +11,9 @@ policy_model_ns = APIRouter(prefix="/AJAN/pomdp/policy_model")
 def init_model(model_data: ProbabilisticModelsData):
     model = AjanPolicyModel(model_data.data,
                             None,
-                            model_data.probability_query,
                             model_data.sample_query,
-                            model_data.argmax_query)
+                            model_data.rollout_query,
+                            model_data.get_all_action_query)
     models[model_data.pomdp_id]['agent']['policy'] = model
     print(model)
     return CreateResponse(name="Created", message="Policy Model Created", id=id(model))
