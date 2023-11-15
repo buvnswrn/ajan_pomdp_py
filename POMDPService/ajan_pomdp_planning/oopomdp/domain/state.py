@@ -1,5 +1,17 @@
 import pomdp_py
-from rdflib import Graph
+from rdflib import Graph, Seq, RDF, Literal, BNode
+
+from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _State, _Type, _Id, pomdp_ns, \
+    _Attributes, _OOState
+
+import sys
+gettrace = getattr(sys, 'gettrace', None)
+debug = False
+if gettrace is None:
+    print('No sys.gettrace')
+elif gettrace():
+    print('Hmm, Big Debugger is watching me')
+    debug = True
 
 
 class AjanAgent(pomdp_py.ObjectState):
@@ -8,11 +20,20 @@ class AjanAgent(pomdp_py.ObjectState):
             to_print = ['id']
         self.to_print = frozenset(to_print)
         self.graph = Graph()
+        state_subject = createIRI(_State, agent_id)
+        self.graph.add((state_subject, RDF.type, _State))
+        self.graph.add((state_subject, _Type, Literal("Agent")))
+        self.graph.add((state_subject, _Id, Literal(agent_id)))
         if attributes is not None:
             attributes = {**attributes, **{"id": agent_id}}
         else:
             attributes = {"id": agent_id}
-
+        attributes_node = BNode()
+        self.graph.add((state_subject, _Attributes, attributes_node))
+        for key, value in attributes.items():
+            self.graph.add((attributes_node, createIRI(pomdp_ns, key), Literal(value)))
+        if debug:
+            print(self.graph.serialize(format='turtle'))
         super().__init__('AjanAgent', attributes)
 
     def __str__(self):
@@ -27,16 +48,29 @@ class AjanAgent(pomdp_py.ObjectState):
 
 
 class AjanEnvObjectState(pomdp_py.ObjectState):
-    def __init__(self, objclass, obj_id, attributes: dict = None,  to_print: list = None):
+    def __init__(self, objclass, obj_id, attributes: dict = None, to_print: list = None):
         if to_print is None:
             to_print = ['id']
         self.to_print = frozenset(to_print)
         self.graph = Graph()
+        state_subject = createIRI(_State, obj_id)
+        self.graph.add((state_subject, RDF.type, _State))
+        self.graph.add((state_subject, _Type, Literal("Env")))
+        self.graph.add((state_subject, _Id, Literal(obj_id)))
         if attributes is not None:
             attributes = {**attributes, **{"id": obj_id}}
         else:
             attributes = {"id": obj_id}
+        attributes_node = BNode()
+        self.graph.add((state_subject, _Attributes, attributes_node))
+        for key, value in attributes.items():
+            self.graph.add((attributes_node, createIRI(pomdp_ns, key), Literal(value)))
+        if debug:
+            print(self.graph.serialize(format='turtle'))
         super().__init__(objclass, attributes)
+
+    def add_attribute(self, key, value):
+        pass
 
     def __str__(self):
         attr_to_print = str(self.attributes['id'])
@@ -47,7 +81,18 @@ class AjanEnvObjectState(pomdp_py.ObjectState):
 
 
 class AjanOOState(pomdp_py.OOState):
-    def __init__(self, object_states):
+    def __init__(self, object_states: dict):
+        self.graph = Graph()
+        states = list()
+        for key, value in object_states.items():
+            state_subject = createIRI(_State, value.attributes['id'])
+            states.append(state_subject)
+            self.graph += value.graph
+            self.graph -= value.graph
+        self.rdf_seq = Seq(self.graph, _OOState, states)
+        if debug:
+            print(self.graph.serialize(format='turtle'))
+
         super().__init__(object_states)
 
     def __str__(self):
@@ -55,6 +100,9 @@ class AjanOOState(pomdp_py.OOState):
 
     def __repr__(self):
         return str(self)
+
+    def __to_rdf__(self):
+        return self.object_states
 
 
 def to_string(obj):

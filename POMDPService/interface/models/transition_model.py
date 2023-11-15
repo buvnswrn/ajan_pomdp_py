@@ -13,6 +13,6 @@ def init_model(model_data: ProbabilisticModelsData):
                                 model_data.probability_query,
                                 model_data.sample_query,
                                 model_data.argmax_query)
-    models[model_data.pomdp_id][model_data.type]['transition'] = model
+    models[model_data.pomdp_id][model_data.type]['transition'][ord(model_data.associated_object_name[0])] = model
     print(model)
     return CreateResponse(name="Created", message="Transition Model Created", id=id(model))
