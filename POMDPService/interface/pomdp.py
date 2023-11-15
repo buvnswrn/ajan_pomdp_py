@@ -24,3 +24,9 @@ def initialize(pomdp: POMDPInit):
     actions[pomdp.pomdp_id] = []
     init_beliefs[pomdp.pomdp_id] = {}
     models[pomdp.pomdp_id] = {'agent': {}, 'env': {}}
+    models[pomdp.pomdp_id]['agent']['transition'] = {}
+    models[pomdp.pomdp_id]['agent']['reward'] = {}
+    models[pomdp.pomdp_id]['agent']['observation'] = {}
+    models[pomdp.pomdp_id]['agent']['policy'] = {}
+    models[pomdp.pomdp_id]['env']['transition'] = {}
+    models[pomdp.pomdp_id]['env']['reward'] = {}

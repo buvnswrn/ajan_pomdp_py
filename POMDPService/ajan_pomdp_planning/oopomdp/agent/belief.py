@@ -1,10 +1,18 @@
 import pomdp_py
 
+from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState
+
 
 class AJANOOBelief(pomdp_py.OOBelief):
     def __init__(self, agent_id, object_beliefs):
         self.agent_id = agent_id
         super().__init__(object_beliefs)
+
+    def mpe(self, **kwargs):
+        return AjanOOState(pomdp_py.OOBelief.mpe(self, **kwargs).object_states)
+
+    def random(self, **kwargs):
+        return AjanOOState(pomdp_py.OOBelief.random(self, **kwargs).object_states)
 
 
 def initialize_belief(p_id: int, belief_dict: dict, representation):

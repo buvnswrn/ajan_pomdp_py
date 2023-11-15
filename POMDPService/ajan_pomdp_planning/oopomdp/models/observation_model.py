@@ -54,7 +54,10 @@ class AjanOOObservationModel(pomdp_py.OOObservationModel):
                                                            argmax_queries[i]) for i in range(0, len(ids))}
         pomdp_py.OOObservationModel.__init__(self, observation_models)
 
+    def __init__(self, observation_models):
+        pomdp_py.OOObservationModel.__init__(self, observation_models)
+
     def sample(self, next_state, action, argmax=False, **kwargs):
         obs = super().sample(next_state, action, argmax, **kwargs)
         return AjanOOObservation(obs)
-
+    

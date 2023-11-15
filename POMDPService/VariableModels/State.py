@@ -12,6 +12,7 @@ class ProbabilisticModelsData(BaseModel):
     type: str = None
     params: Attributes = None
     data: str
+    associated_object_name: str = None
     probability_query: str = None
     sample_query: str = None
     argmax_query: str = None
@@ -29,6 +30,11 @@ class State(BaseModel):
 class StateInit(BaseModel):
     pomdp_id: int
     state: State
+
+
+class ActionInit(BaseModel):
+    pomdp_id: int
+    action_name: str
 
 
 class POMDPInit(BaseModel):
