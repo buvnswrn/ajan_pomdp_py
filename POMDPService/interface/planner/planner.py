@@ -1,4 +1,5 @@
 import ctypes
+import time
 
 import pomdp_py
 from fastapi import APIRouter
@@ -44,7 +45,9 @@ def create_planner(planner_init: PlannerInit):
                  response_model=CreateResponse)
 def get_action(pomdp: POMDPInit):
     pomdp_id = pomdp.pomdp_id
+    start_time = time.time()
     action = planners[pomdp_id].plan(problems[pomdp_id].agent)
     last_action[pomdp_id] = action
+    print(str(action) + " in " + str(time.time() - start_time) + " seconds")
     return CreateResponse(name=str(action), message="Fetched the action", id=id(action))
 
