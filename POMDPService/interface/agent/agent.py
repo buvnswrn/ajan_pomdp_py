@@ -1,11 +1,14 @@
 import ctypes
 
 from fastapi import APIRouter
+from rdflib import Graph
+
 from POMDPService.VariableModels.ResponseModels import CreateResponse, BooleanResponse
 from POMDPService.VariableModels.State import AgentInit
 from POMDPService.ajan_pomdp_planning.oopomdp.agent.agent import AjanAgent
 from POMDPService.ajan_pomdp_planning.oopomdp.problem import AjanOOPOMDP
 from POMDPService.interface.pomdp import init_beliefs, models, agents, problems, last_action, last_observation
+from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import _CurrentObservation
 
 agent_ns = APIRouter(prefix="/AJAN/pomdp/agent")
 
@@ -42,7 +45,18 @@ def clear_history(pomdp_id):
 
 
 @agent_ns.post("/update-history", summary="Updates the agent's history", response_model=BooleanResponse)
-def update_history(pomdp_id):
+def update_history(pomdp: AgentInit):
+    pomdp_id = pomdp.pomdp_id
+    # Create and observation and then update the history
+    create_observation(pomdp.data)
     problem: AjanOOPOMDP = problems[pomdp_id]
     problem.agent.update_history(last_action[pomdp_id], last_observation[pomdp_id])
     return BooleanResponse(success=True, message="Agent history updated successfully")
+
+
+def create_observation(data):
+    # Create an observation
+    g = Graph()
+    g.parse(data=data)
+    for s, p, o in g.triples((_CurrentObservation, None, None)):
+        print(s, p, o)

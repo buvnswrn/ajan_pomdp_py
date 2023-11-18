@@ -23,6 +23,7 @@ _NextState = pomdp_ns["next_state"]
 _CurrentState = pomdp_ns["current_state"]
 _CurrentAction = pomdp_ns["current_action"]
 _Probability = pomdp_ns["probability"]
+_CurrentObservation = pomdp_ns["CurrentObservation"]
 
 
 def createIRI(namespace, _id):
