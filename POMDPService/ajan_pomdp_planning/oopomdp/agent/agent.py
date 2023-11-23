@@ -10,3 +10,7 @@ class AjanAgent(pomdp_py.Agent):
                          transition_model=transition_model,
                          observation_model=observation_model,
                          reward_model=reward_model)
+
+    def clear_history(self):
+        """Custom function; clear history"""
+        self._history = None

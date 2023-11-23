@@ -6,11 +6,11 @@ from fastapi import APIRouter
 from rdflib import Graph, RDF, XSD
 
 from POMDPService.VariableModels.ResponseModels import CreateResponse, BooleanResponse
-from POMDPService.VariableModels.State import AgentInit
+from POMDPService.VariableModels.State import AgentInit, POMDPInit
 from POMDPService.ajan_pomdp_planning.oopomdp.agent.agent import AjanAgent
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.observation import AjanObservation
-from POMDPService.ajan_pomdp_planning.oopomdp.problem import AjanOOPOMDP
-from POMDPService.interface.pomdp import init_beliefs, models, agents, problems, last_action, last_observation
+from POMDPService.ajan_pomdp_planning.oopomdp.problem import AjanOOPOMDP, update_belief
+from POMDPService.interface.pomdp import init_beliefs, models, agents, problems, last_action, last_observation, planners
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import _CurrentObservation, pomdp_ns1, pomdp_ns, _Type
 
 agent_ns = APIRouter(prefix="/AJAN/pomdp/agent")
@@ -41,9 +41,20 @@ def create_agent(agent_init: AgentInit):
     return CreateResponse(name=str(agent), message="Created the agent", id=id(agent))
 
 
+@agent_ns.post("/update-belief", summary="Get the agent's action", response_model=CreateResponse)
+def belief_update(agent_init: AgentInit):
+    pomdp_id = agent_init.pomdp_id
+    # Create an observation
+    observation = create_observation(agent_init.data)
+    # Update the belief
+    problem: AjanOOPOMDP = problems[pomdp_id]
+    update_belief(agents[pomdp_id],last_action[pomdp_id], observation, planners[pomdp_id], obj_id=agent_init.state_id)
+    return CreateResponse(name=str(problem.agent.cur_belief), message="Updated the agent's belief",
+                          id=id(problem.agent.cur_belief))
+
 @agent_ns.post("/clear-history", summary="Clears the agent's history", response_model=BooleanResponse)
-def clear_history(pomdp_id):
-    problems[pomdp_id].agent.clear_history()
+def clear_history(pomdp: POMDPInit):
+    problems[pomdp.pomdp_id].agent.clear_history()
     return BooleanResponse(success=True, message="History cleared successfully")
 
 

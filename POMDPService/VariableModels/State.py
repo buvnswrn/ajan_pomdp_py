@@ -84,6 +84,7 @@ class BeliefInit(BaseModel):
 class AgentInit(BaseModel):
     pomdp_id: int
     data: str
+    state_id: int = None
     init_belief: int = None
     policy_model: int = None
     transition_model: int = None
