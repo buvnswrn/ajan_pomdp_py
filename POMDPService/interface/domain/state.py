@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from POMDPService.VariableModels.ResponseModels import CreateResponse
 from POMDPService.VariableModels.State import StateInit, POMDPInit
-from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanAgent, AjanEnvObjectState, AjanOOState
+from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanAgentState, AjanEnvObjectState, AjanOOState
 from POMDPService.interface.pomdp import states, init_states
 
 state_ns = APIRouter(prefix="/AJAN/pomdp/state")
@@ -25,20 +25,20 @@ def get_state(state, pomdp_id=None):
         attributes = state.state.params.attributes
         to_print = state.state.params.to_print
     if state.state.type.lower() == "agent":
-        agent = AjanAgent(state.state.id, attributes=attributes, to_print=to_print)
+        agent_state = AjanAgentState(state.state.id, attributes=attributes, to_print=to_print)
     elif state.state.type.lower() == "env":
-        agent = AjanEnvObjectState(state.state.name, state.state.id, attributes=attributes,
-                                   to_print=to_print)
+        agent_state = AjanEnvObjectState(state.state.name, state.state.id, attributes=attributes,
+                                         to_print=to_print)
     else:
-        agent = None
-    if agent is not None:
+        agent_state = None
+    if agent_state is not None:
         if not states[pomdp_id].keys().__contains__(state.state.id):
-            states[pomdp_id][state.state.id] = agent
+            states[pomdp_id][state.state.id] = agent_state
         else:
             raise HTTPException(status_code=406, detail="State ID is already used")
     else:
         raise HTTPException(status_code=406, detail="State cannot be created, Possible types are 'agent', 'env'")
-    return agent
+    return agent_state
 
 
 @state_ns.post("/create/object", summary="Create a Object state",

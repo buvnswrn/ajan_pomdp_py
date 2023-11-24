@@ -2,7 +2,7 @@ import pomdp_py
 import rdflib.term
 from rdflib import Graph, RDF, Seq
 
-from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState, AjanEnvObjectState, AjanAgent
+from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState, AjanEnvObjectState, AjanAgentState
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import pomdp_ns, createIRI, _State, \
     _CurrentState, _CurrentAction, _Action, _NextState
 
@@ -82,7 +82,7 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
         for s, p, o in self.graph.triples((state_attributes_node, None, None)):
             print(s, p, o)
             key = p.split("_")[-1]
-            dt = rdflib.term.XSDToPython[o.datatype] # watchout for string value
+            dt = rdflib.term.XSDToPython[o.datatype]  # watchout for string value
             value = str(o)
             if dt is not None:
                 value = dt(value)
@@ -90,7 +90,10 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
         if state_type == "Env":
             result_state = AjanEnvObjectState("", state_id, attributes=state_attributes)
         elif state_type == "Agent":
-            result_state = AjanAgent(state_id, state_attributes)
+            result_state = AjanAgentState(state_id, state_attributes)
+        # Change: Add name to the state
+        # result_oo_state = AjanOOState({ord(state_name[0]): result_state})
+        # result_state = result_oo_state
         return result_state
 
     def remove_oo_state_from_graph(self, state):

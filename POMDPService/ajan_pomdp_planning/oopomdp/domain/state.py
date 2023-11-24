@@ -5,6 +5,7 @@ from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIR
     _Attributes, _OOState
 
 import sys
+
 gettrace = getattr(sys, 'gettrace', None)
 debug = False
 if gettrace is None:
@@ -14,7 +15,7 @@ elif gettrace():
     debug = True
 
 
-class AjanAgent(pomdp_py.ObjectState):
+class AjanAgentState(pomdp_py.ObjectState):
     def __init__(self, agent_id, attributes: dict = None, to_print: list = None):
         if to_print is None:
             to_print = ['id']
@@ -113,7 +114,7 @@ if __name__ == "__main__":
     attr = {"gesture": False, "pose": (1, 0)}
     toprint = ["gesture"]
     toprint1 = ["gesture", "pose"]
-    agent = AjanAgent(9, attr, toprint)
+    agent = AjanAgentState(9, attr, toprint)
     agent1 = AjanEnvObjectState("Person", 120, attr, toprint1)
     agent1.attributes['pose'] = (10, 9)
     print(agent.attributes['id'])
