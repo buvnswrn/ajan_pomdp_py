@@ -21,20 +21,24 @@ def get_state_query(state):
     #     ?state (pomdp-ns:|!pomdp-ns:)* ?s .
     #     ?s ?p ?o .
     #     }"""
+    # Change: Add ?name
     query = """PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
         PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
         PREFIX rdfs:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         
-        SELECT DISTINCT ?id ?type ?attributes
+        SELECT DISTINCT ?id 
+         ?name 
+        ?type ?attributes
         WHERE {
             {
             
-            BIND (<"""+str(state)+"""> as ?state)
+            BIND (<""" + str(state) + """> as ?state)
             
             }
             ?state (pomdp-ns:|!pomdp-ns:)* ?s .
             ?state pomdp-ns:id ?id .
             ?state pomdp-ns:type ?type .
+            ?state pomdp-ns:name ?name .
             ?state pomdp-ns:attributes ?attributes .
             ?s ?p ?o .
         }"""
@@ -42,7 +46,8 @@ def get_state_query(state):
 
 
 class AjanTransitionModel(pomdp_py.TransitionModel):
-    def __init__(self, data, attributes, probability_query, sample_query, argmax_query):
+    def __init__(self, model_id, data, attributes, probability_query, sample_query, argmax_query):
+        self.model_id = model_id
         self.graph = Graph()
         self.graph.parse(data=data)
         self.attributes = attributes
@@ -77,6 +82,7 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
         result = out.bindings[0]
         state_id = int(result['id'])
         state_type = str(result['type'])
+        state_name = str(result['name'])
         state_attributes_node = result['attributes']
         state_attributes = dict()
         for s, p, o in self.graph.triples((state_attributes_node, None, None)):
@@ -88,9 +94,9 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
                 value = dt(value)
             state_attributes[key] = value
         if state_type == "Env":
-            result_state = AjanEnvObjectState("", state_id, attributes=state_attributes)
+            result_state = AjanEnvObjectState(state_name, state_id, attributes=state_attributes)
         elif state_type == "Agent":
-            result_state = AjanAgentState(state_id, state_attributes)
+            result_state = AjanAgentState(state_name, state_id, state_attributes)
         # Change: Add name to the state
         # result_oo_state = AjanOOState({ord(state_name[0]): result_state})
         # result_state = result_oo_state

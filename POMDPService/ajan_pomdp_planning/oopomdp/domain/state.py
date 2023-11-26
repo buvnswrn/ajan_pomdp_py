@@ -2,7 +2,7 @@ import pomdp_py
 from rdflib import Graph, Seq, RDF, Literal, BNode
 
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _State, _Type, _Id, pomdp_ns, \
-    _Attributes, _OOState
+    _Attributes, _OOState, _Name
 
 import sys
 
@@ -16,7 +16,7 @@ elif gettrace():
 
 
 class AjanAgentState(pomdp_py.ObjectState):
-    def __init__(self, agent_id, attributes: dict = None, to_print: list = None):
+    def __init__(self, name, agent_id, attributes: dict = None, to_print: list = None):
         if to_print is None:
             to_print = ['id']
         self.to_print = frozenset(to_print)
@@ -25,6 +25,7 @@ class AjanAgentState(pomdp_py.ObjectState):
         self.graph.add((state_subject, RDF.type, _State))
         self.graph.add((state_subject, _Type, Literal("Agent")))
         self.graph.add((state_subject, _Id, Literal(agent_id)))
+        self.graph.add((state_subject, _Name, Literal(name)))
         if attributes is not None:
             attributes = {**attributes, **{"id": agent_id}}
         else:
@@ -35,7 +36,7 @@ class AjanAgentState(pomdp_py.ObjectState):
             self.graph.add((attributes_node, createIRI(pomdp_ns, key), Literal(value)))
         if debug:
             print(self.graph.serialize(format='turtle'))
-        super().__init__('AjanAgent', attributes)
+        super().__init__('AjanAgent_' + name, attributes)
 
     def __str__(self):
         attr_to_print = str(self.attributes['id'])
@@ -58,6 +59,7 @@ class AjanEnvObjectState(pomdp_py.ObjectState):
         self.graph.add((state_subject, RDF.type, _State))
         self.graph.add((state_subject, _Type, Literal("Env")))
         self.graph.add((state_subject, _Id, Literal(obj_id)))
+        self.graph.add((state_subject, _Name, Literal(objclass)))
         if attributes is not None:
             attributes = {**attributes, **{"id": obj_id}}
         else:
@@ -68,7 +70,7 @@ class AjanEnvObjectState(pomdp_py.ObjectState):
             self.graph.add((attributes_node, createIRI(pomdp_ns, key), Literal(value)))
         if debug:
             print(self.graph.serialize(format='turtle'))
-        super().__init__(objclass, attributes)
+        super().__init__("AjanEnv_" + objclass, attributes)
 
     def add_attribute(self, key, value):
         pass
@@ -114,7 +116,7 @@ if __name__ == "__main__":
     attr = {"gesture": False, "pose": (1, 0)}
     toprint = ["gesture"]
     toprint1 = ["gesture", "pose"]
-    agent = AjanAgentState(9, attr, toprint)
+    agent = AjanAgentState("Drone", 9, attr, toprint)
     agent1 = AjanEnvObjectState("Person", 120, attr, toprint1)
     agent1.attributes['pose'] = (10, 9)
     print(agent.attributes['id'])

@@ -25,7 +25,7 @@ def get_state(state, pomdp_id=None):
         attributes = state.state.params.attributes
         to_print = state.state.params.to_print
     if state.state.type.lower() == "agent":
-        agent_state = AjanAgentState(state.state.id, attributes=attributes, to_print=to_print)
+        agent_state = AjanAgentState(state.state.name, state.state.id, attributes=attributes, to_print=to_print)
     elif state.state.type.lower() == "env":
         agent_state = AjanEnvObjectState(state.state.name, state.state.id, attributes=attributes,
                                          to_print=to_print)

@@ -33,8 +33,10 @@ def convert_to_states(p_id: int, belief_dict: List[BeliefPrior]):
         agent_state = get_state(prior, p_id)
         if not init_belief_dict.keys().__contains__(p_id):
             init_belief_dict[p_id] = {}
-        if not init_belief_dict[p_id].keys().__contains__(agent_state.objclass):
-            init_belief_dict[p_id][agent_state.objclass] = {}
+        key: str = agent_state.objclass
+        key = key.split("_")[1]
+        if not init_belief_dict[p_id].keys().__contains__(key):
+            init_belief_dict[p_id][key] = {}
         state_prob[agent_state] = prior.probability
-        init_belief_dict[p_id][agent_state.objclass].update(state_prob)
+        init_belief_dict[p_id][key].update(state_prob)
     return init_belief_dict  # { 0: {'drone': {state1:prob} } }

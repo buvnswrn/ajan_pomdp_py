@@ -18,6 +18,7 @@ _BeliefState = pomdp_ns["BeliefState"]
 
 _Type = pomdp_ns["type"]
 _Id = pomdp_ns["id"]
+_Name = pomdp_ns["name"]
 _Attributes = pomdp_ns["attributes"]
 _NextState = pomdp_ns["next_state"]
 _CurrentState = pomdp_ns["current_state"]

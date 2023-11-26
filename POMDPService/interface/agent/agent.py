@@ -48,9 +48,13 @@ def belief_update(agent_init: AgentInit):
     observation = create_observation(agent_init.data)
     # Update the belief
     problem: AjanOOPOMDP = problems[pomdp_id]
-    update_belief(agents[pomdp_id],last_action[pomdp_id], observation, planners[pomdp_id], obj_id=agent_init.state_id)
+    update_belief(agents[pomdp_id], last_action[pomdp_id], observation, planners[pomdp_id],
+                  obj_id=ord(agent_init.state_name[0]), state_id=agent_init.state_id)
+    # update_belief(agents[pomdp_id],last_action[pomdp_id], observation, planners[pomdp_id],
+    #               obj_id=ord(agent_init.state_name[0]), state_id=agent_init.state_id)
     return CreateResponse(name=str(problem.agent.cur_belief), message="Updated the agent's belief",
                           id=id(problem.agent.cur_belief))
+
 
 @agent_ns.post("/clear-history", summary="Clears the agent's history", response_model=BooleanResponse)
 def clear_history(pomdp: POMDPInit):
