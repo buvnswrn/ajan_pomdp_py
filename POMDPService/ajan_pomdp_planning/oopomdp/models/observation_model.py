@@ -67,13 +67,14 @@ class AjanObservationModel(pomdp_py.ObservationModel):
         self.argmax_query = argmax_query
         self.sample_query = sample_query
 
-    def probability(self, observation, next_state, action):
-        self.graph.add((pomdp_ns['observation'], RDF.value,
-                        pomdp_ns[observation]))
+    def probability(self, observation, next_state, action) -> float:
+        # self.graph.add((pomdp_ns['observation'], RDF.value,
+        #                 pomdp_ns[observation]))
         out = self.parse_query(self.probability_query, next_state, action)
         # Update the observation, next_state, action to the local graph
         # Assign some random probability
-        return out.probability
+        probability = [a.probability for a in out][0]
+        return float(probability)
 
     def sample(self, next_state, action):
         if self.sample_query == "argmax":
