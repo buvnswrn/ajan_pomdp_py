@@ -89,6 +89,7 @@ class AjanObservationModel(pomdp_py.ObservationModel):
         out = self.parse_query(self.argmax_query, next_state, action)
         return self.convert_to_observation(out.argmax)
 
+    # region Helper Functions
     def convert_to_observation(self, observation_uri) -> AjanObservation:
         out = self.graph.query(get_observation_query(observation_uri))
         result = out.bindings[0]
@@ -128,9 +129,14 @@ class AjanObservationModel(pomdp_py.ObservationModel):
 
     def parse_query(self, query, next_state, action):
         self.add_action_to_graph(action)
-        self.add_next_state_to_graph(next_state)
+        if isinstance(next_state, pomdp_py.OOState):
+            self.add_next_state_to_graph(next_state)
+        else:
+            self.graph += next_state.graph
         out = self.graph.query(query)
         return out
+
+    # endregion
 
 
 class AjanOOObservationModel(pomdp_py.OOObservationModel):

@@ -91,7 +91,7 @@ class AjanOOState(pomdp_py.OOState):
             state_subject = createIRI(_State, value.attributes['id'])
             states.append(state_subject)
             self.graph += value.graph
-            self.graph -= value.graph
+            # self.graph -= value.graph
         self.rdf_seq = Seq(self.graph, _OOState, states)
         if debug:
             print(self.graph.serialize(format='turtle'))

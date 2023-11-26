@@ -1,3 +1,5 @@
+import sys
+
 import pomdp_py
 import rdflib.term
 from rdflib import Graph, RDF, Seq
@@ -6,6 +8,7 @@ from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState, A
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import pomdp_ns, createIRI, _State, \
     _CurrentState, _CurrentAction, _Action, _NextState
 
+gettrace = getattr(sys, 'gettrace', None)
 
 def get_state_query(state):
     # query = """PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
@@ -60,10 +63,8 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
 
         # check whether the passed state is OOState or not
         # Based on that load the corresponding state. Filter the needed states only
-        if isinstance(state, AjanOOState):
-            state = state.object_states[self.model_id]
-        if isinstance(next_state, AjanOOState):
-            next_state = next_state.object_states[self.model_id]
+        state = self.check_state(state)
+        next_state = self.check_state(next_state)
         # add the corresponding data to the graph to query them
         self.graph.add((pomdp_ns['state'], RDF.value,
                         pomdp_ns[state]))
@@ -74,6 +75,7 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
     def sample(self, state, action):
         if self.sample_query == "argmax":
             return self.argmax(state, action)
+        state = self.check_state(state)
         out = self.parse_query(self.sample_query, state, action, remove_cache=False)
         result_state_uri = [a.sample for a in out][0]
         # Does not return OO State
@@ -83,8 +85,11 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
     def argmax(self, state, action):
         if self.argmax_query == "sample":
             return self.sample(state, action)
+        state = self.check_state(state)
         out = self.parse_query(self.argmax_query, state, action)
         return self.convert_to_states(out.argmax)
+
+    # region Helper Functions
 
     def convert_to_states(self, state_uri):
         out = self.graph.query(get_state_query(state_uri))
@@ -95,21 +100,27 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
         state_attributes_node = result['attributes']
         state_attributes = dict()
         for s, p, o in self.graph.triples((state_attributes_node, None, None)):
-            print(s, p, o)
+            if gettrace():
+                print(s, p, o)
             key = p.split("_")[-1]
             dt = rdflib.term.XSDToPython[o.datatype]  # watchout for string value
             value = str(o)
             if dt is not None:
                 value = dt(value)
             state_attributes[key] = value
-        if state_type == "Env":
+        if state_type.lower() == "env":
             result_state = AjanEnvObjectState(state_name, state_id, attributes=state_attributes)
-        elif state_type == "Agent":
+        elif state_type.lower() == "agent":
             result_state = AjanAgentState(state_name, state_id, state_attributes)
         # Change: Add name to the state
         # result_oo_state = AjanOOState({ord(state_name[0]): result_state})  # This should not convert to OOState
         # result_state = result_oo_state
         return result_state
+
+    def check_state(self, state):
+        if isinstance(state, AjanOOState):
+            state = state.object_states[self.model_id]
+        return state
 
     def remove_oo_state_from_graph(self, state):
         for key, value in state.object_states.items():
@@ -151,6 +162,8 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
             if next_state is not None:
                 self.remove_state_from_graph(next_state)
         return out
+
+    # endregion
 
 
 class AjanOOTransitionModel(pomdp_py.OOTransitionModel):
