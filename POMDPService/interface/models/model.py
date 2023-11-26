@@ -15,12 +15,16 @@ def init_model(pomdp: POMDPInit):
     oo_observation_model = AjanOOObservationModel(models[pomdp.pomdp_id]['agent']['observation'])
     models[pomdp.pomdp_id]['agent']['observation'] = oo_observation_model
 
-    oo_transition_model = AjanOOTransitionModel(models[pomdp.pomdp_id]['agent']['transition'])
+    # should be id:transition_models
+    combined_transition_models = {**models[pomdp.pomdp_id]['agent']['transition'],
+                                  **models[pomdp.pomdp_id]['env']['transition']}
+
+    oo_transition_model = AjanOOTransitionModel(combined_transition_models)
     models[pomdp.pomdp_id]['agent']['transition'] = oo_transition_model
 
     # Environment models
-
-    oo_transition_model = AjanOOTransitionModel(models[pomdp.pomdp_id]['env']['transition'])
+    # Populate the same transition models to both environment and the agent for now.
+    # Since, environment has not much effect.
     models[pomdp.pomdp_id]['env']['transition'] = oo_transition_model
 
     return CreateResponse(name="Created", message="Observation Model Created")

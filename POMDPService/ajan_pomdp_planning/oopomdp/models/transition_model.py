@@ -57,6 +57,14 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
         self.prev_graphs = list()
 
     def probability(self, next_state, state, action):
+
+        # check whether the passed state is OOState or not
+        # Based on that load the corresponding state. Filter the needed states only
+        if isinstance(state, AjanOOState):
+            state = state.object_states[self.model_id]
+        if isinstance(next_state, AjanOOState):
+            next_state = next_state.object_states[self.model_id]
+        # add the corresponding data to the graph to query them
         self.graph.add((pomdp_ns['state'], RDF.value,
                         pomdp_ns[state]))
         out = self.parse_query(self.probability_query, state, action, next_state)
@@ -68,7 +76,8 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
             return self.argmax(state, action)
         out = self.parse_query(self.sample_query, state, action, remove_cache=False)
         result_state_uri = [a.sample for a in out][0]
-        result_state = self.convert_to_states(result_state_uri)
+        # Does not return OO State
+        result_state = self.convert_to_states(result_state_uri)  # this should not be barely returning a state
         return result_state  # Send some sample state
 
     def argmax(self, state, action):
@@ -98,13 +107,16 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
         elif state_type == "Agent":
             result_state = AjanAgentState(state_name, state_id, state_attributes)
         # Change: Add name to the state
-        # result_oo_state = AjanOOState({ord(state_name[0]): result_state})
+        # result_oo_state = AjanOOState({ord(state_name[0]): result_state})  # This should not convert to OOState
         # result_state = result_oo_state
         return result_state
 
     def remove_oo_state_from_graph(self, state):
         for key, value in state.object_states.items():
-            self.graph -= value.graph
+            self.remove_state_from_graph(value)
+
+    def remove_state_from_graph(self, state):
+        self.graph -= state.graph
 
     def remove_action_from_graph(self, action):
         self.graph -= action.graph
@@ -123,18 +135,21 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
             self.graph += value.graph
         Seq(self.graph, namespace, states)
 
+    def add_state_to_graph(self, state):
+        self.graph += state.graph
+
     def parse_query(self, query, state, action, next_state=None, remove_cache=True):
         self.add_action_to_graph(action)
-        self.add_oo_state_to_graph(state, _CurrentState)
+        self.add_state_to_graph(state)  # removed oo state since we do not need it.
         if next_state is not None:
-            self.add_oo_state_to_graph(next_state, _NextState)
+            self.add_state_to_graph(next_state)  # removed oo state since we do not need it.
         out = self.graph.query(query)
         # result_state = [a[key_value] for a in out][0]
         if remove_cache:
             self.remove_action_from_graph(action)
-            self.remove_oo_state_from_graph(state)
+            self.remove_state_from_graph(state)
             if next_state is not None:
-                self.remove_oo_state_from_graph(next_state)
+                self.remove_state_from_graph(next_state)
         return out
 
 
@@ -152,7 +167,7 @@ class AjanOOTransitionModel(pomdp_py.OOTransitionModel):
 
     def sample(self, state, action, argmax=False, **kwargs):
         oostate = pomdp_py.OOTransitionModel.sample(self, state, action, **kwargs)
-        return AjanOOState(oostate.object_states)
+        return AjanOOState(oostate.object_states)  # this should be the one converting to OOState after getting a state
 
     def argmax(self, state, action, **kwargs):
         oostate = pomdp_py.OOTransitionModel.argmax(self, state, action, **kwargs)
