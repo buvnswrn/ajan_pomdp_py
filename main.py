@@ -1,5 +1,9 @@
+import rdflib
 from fastapi import FastAPI
+from rdflib.plugins.sparql import CUSTOM_EVALS
 
+from CustomSPARQLFunctions import semantic_fields
+from CustomSPARQLFunctions.math import distance
 from POMDPService.interface.agent.agent import agent_ns
 from POMDPService.interface.domain.observation import obs_ns
 from POMDPService.interface.models.model import model_ns
@@ -14,6 +18,11 @@ from POMDPService.interface.domain.action import action_ns
 from POMDPService.interface.agent.belief import belief_ns
 from POMDPService.interface.env.env import env_ns
 from POMDPService.interface.problem import problem_ns
+
+# Register Custom SPARQL Functions
+rdflib.plugins.sparql.CUSTOM_EVALS["math_dist"] = distance
+rdflib.plugins.sparql.CUSTOM_EVALS["semantic_field_near"] = semantic_fields.near
+
 
 app = FastAPI(title="AJAN-POMDP", description="API for planning with pomdp-py through AJAN")
 app.include_router(pomdp_ns, tags=['POMDP Service'])
