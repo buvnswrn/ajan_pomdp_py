@@ -2,6 +2,7 @@ from rdflib import URIRef, Namespace
 
 pomdp_ns = Namespace("http://www.dfki.de/pomdp-ns#")
 pomdp_ns1 = Namespace("http://www.dfki.de/pomdp-ns/POMDP/")
+pomdp_data_ns = Namespace("http://www.dfki.de/pomdp-ns/POMDP/data/")
 POMDP = URIRef("http://www.dfki.de/pomdp-ns#POMDP")
 
 _OOState = pomdp_ns["OOState"]
@@ -25,6 +26,7 @@ _CurrentState = pomdp_ns["current_state"]
 _CurrentAction = pomdp_ns["current_action"]
 _Probability = pomdp_ns["probability"]
 _CurrentObservation = pomdp_ns["CurrentObservation"]
+_Pandas = pomdp_data_ns["pandasDataFrame"]
 
 
 def createIRI(namespace, _id):

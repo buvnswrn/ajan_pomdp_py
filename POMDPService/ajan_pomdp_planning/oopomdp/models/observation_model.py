@@ -70,7 +70,7 @@ class AjanObservationModel(pomdp_py.ObservationModel):
     def probability(self, observation, next_state, action) -> float:
         # self.graph.add((pomdp_ns['observation'], RDF.value,
         #                 pomdp_ns[observation]))
-        out = self.parse_query(self.probability_query, next_state, action)
+        out = self.parse_query(self.probability_query, next_state, action, observation)
         # Update the observation, next_state, action to the local graph
         # Assign some random probability
         probability = [a.probability for a in out][0]
@@ -128,7 +128,11 @@ class AjanObservationModel(pomdp_py.ObservationModel):
             self.graph += value.graph
         Seq(self.graph, _NextState, states)
 
-    def parse_query(self, query, next_state, action):
+    def parse_query(self, query, next_state, action, observation=None):
+        if observation is not None:
+            # TODO: Observation graph is not being loaded.
+            #  Either load the observation to the graph or else just convert them and use them.
+            self.graph += observation.graph
         self.add_action_to_graph(action)
         if isinstance(next_state, pomdp_py.OOState):
             self.add_next_state_to_graph(next_state)
