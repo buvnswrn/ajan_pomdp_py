@@ -1,51 +1,11 @@
-import sys
-
 import pomdp_py
-import rdflib.term
-from rdflib import Graph, RDF, Seq
+from rdflib import Graph, Seq
 
-from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState, AjanEnvObjectState, AjanAgentState
-from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import pomdp_ns, createIRI, _State, \
-    _CurrentState, _CurrentAction, _Action, _NextState
-
-gettrace = getattr(sys, 'gettrace', None)
-
-def get_state_query(state):
-    # query = """PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
-    # PREFIX rdfs:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    #
-    # SELECT ?s ?p ?o
-    # WHERE {
-    #     {
-    #
-    #     BIND (<"""+str(state)+"""> as ?state)
-    #
-    #     }
-    #     ?state (pomdp-ns:|!pomdp-ns:)* ?s .
-    #     ?s ?p ?o .
-    #     }"""
-    # Change: Add ?name
-    query = """PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
-        PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
-        PREFIX rdfs:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        
-        SELECT DISTINCT ?id 
-         ?name 
-        ?type ?attributes
-        WHERE {
-            {
-            
-            BIND (<""" + str(state) + """> as ?state)
-            
-            }
-            ?state (pomdp-ns:|!pomdp-ns:)* ?s .
-            ?state pomdp-ns:id ?id .
-            ?state pomdp-ns:type ?type .
-            ?state pomdp-ns:name ?name .
-            ?state pomdp-ns:attributes ?attributes .
-            ?s ?p ?o .
-        }"""
-    return query
+from POMDPService.ajan_pomdp_planning.helpers.to_graph import check_state, \
+    remove_state_from_graph, parse_query, convert_to_states
+from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState
+from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _State, \
+    _CurrentState
 
 
 class AjanTransitionModel(pomdp_py.TransitionModel):
@@ -63,23 +23,23 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
 
         # check whether the passed state is OOState or not
         # Based on that load the corresponding state. Filter the needed states only
-        state = self.check_state(state)
-        next_state = self.check_state(next_state)
+        state = check_state(self.model_id, state)
+        next_state = check_state(self.model_id, next_state)
+
         # add the corresponding data to the graph to query them
         self.graph.add((pomdp_ns['state'], RDF.value,
                         pomdp_ns[state]))
         out = self.parse_query(self.probability_query, state, action, next_state)
+        out = parse_query(self.graph, self.probability_query, state, action, next_state)
         # Update the observation, next_state, action to the local graph
-        return out.probability
+        return float(out.bindings[0]['probability'])
 
     def sample(self, state, action):
-        if self.sample_query == "argmax":
-            return self.argmax(state, action)
-        state = self.check_state(state)
-        out = self.parse_query(self.sample_query, state, action, remove_cache=False)
+        state = check_state(self.model_id, state)
+        out = parse_query(self.graph, self.sample_query, state, action, remove_cache=False)
         result_state_uri = [a.sample for a in out][0]
         # Does not return OO State
-        result_state = self.convert_to_states(result_state_uri)  # this should not be barely returning a state
+        result_state = convert_to_states(self.graph, result_state_uri)  # this should not be barely returning a state
         return result_state  # Send some sample state
 
     def argmax(self, state, action):
@@ -88,54 +48,16 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
         state = self.check_state(state)
         out = self.parse_query(self.argmax_query, state, action)
         return self.convert_to_states(out.argmax)
+        state = check_state(self.model_id, state)
+        out = parse_query(self.graph, self.argmax_query, state, action)
+        result_state_uri = [a.argmax for a in out][0]
+        return convert_to_states(self.graph, result_state_uri)
 
     # region Helper Functions
 
-    def convert_to_states(self, state_uri):
-        out = self.graph.query(get_state_query(state_uri))
-        result = out.bindings[0]
-        state_id = int(result['id'])
-        state_type = str(result['type'])
-        state_name = str(result['name'])
-        state_attributes_node = result['attributes']
-        state_attributes = dict()
-        for s, p, o in self.graph.triples((state_attributes_node, None, None)):
-            if gettrace():
-                print(s, p, o)
-            key = p.split("_")[-1]
-            dt = rdflib.term.XSDToPython[o.datatype]  # watchout for string value
-            value = str(o)
-            if dt is not None:
-                value = dt(value)
-            state_attributes[key] = value
-        if state_type.lower() == "env":
-            result_state = AjanEnvObjectState(state_name, state_id, attributes=state_attributes)
-        elif state_type.lower() == "agent":
-            result_state = AjanAgentState(state_name, state_id, state_attributes)
-        # Change: Add name to the state
-        # result_oo_state = AjanOOState({ord(state_name[0]): result_state})  # This should not convert to OOState
-        # result_state = result_oo_state
-        return result_state
-
-    def check_state(self, state):
-        if isinstance(state, AjanOOState):
-            state = state.object_states[self.model_id]
-        return state
-
     def remove_oo_state_from_graph(self, state):
         for key, value in state.object_states.items():
-            self.remove_state_from_graph(value)
-
-    def remove_state_from_graph(self, state):
-        self.graph -= state.graph
-
-    def remove_action_from_graph(self, action):
-        self.graph -= action.graph
-
-    def add_action_to_graph(self, action):
-        # Add Current Action value and it's graph
-        self.graph.add((_CurrentAction, RDF.value, createIRI(_Action, action)))
-        self.graph += action.graph
+            remove_state_from_graph(self.graph, value, _CurrentState)
 
     def add_oo_state_to_graph(self, state, namespace):
         # Add Current State value and it's graph
@@ -145,23 +67,6 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
             states.append(state_subject)
             self.graph += value.graph
         Seq(self.graph, namespace, states)
-
-    def add_state_to_graph(self, state):
-        self.graph += state.graph
-
-    def parse_query(self, query, state, action, next_state=None, remove_cache=True):
-        self.add_action_to_graph(action)
-        self.add_state_to_graph(state)  # removed oo state since we do not need it.
-        if next_state is not None:
-            self.add_state_to_graph(next_state)  # removed oo state since we do not need it.
-        out = self.graph.query(query)
-        # result_state = [a[key_value] for a in out][0]
-        if remove_cache:
-            self.remove_action_from_graph(action)
-            self.remove_state_from_graph(state)
-            if next_state is not None:
-                self.remove_state_from_graph(next_state)
-        return out
 
     # endregion
 

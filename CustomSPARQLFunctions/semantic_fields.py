@@ -72,7 +72,7 @@ if __name__ == "__main__":
          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
          PREFIX pomdp-ns: <http://www.dfki.de/pomdp-ns#>
 
-        SELECT ?distance ?sigma ?probability WHERE {
+        SELECT ?probability WHERE {
           BIND(1.0 AS ?distance) .
           BIND(2.0 AS ?sigma) .
           BIND(ajan-math:calculate_near_probability(?distance, ?sigma) AS ?probability)
