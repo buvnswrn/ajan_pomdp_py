@@ -2,7 +2,7 @@ import pomdp_py
 from rdflib import Graph, Seq
 
 from POMDPService.ajan_pomdp_planning.helpers.to_graph import check_state, \
-    remove_state_from_graph, parse_query, convert_to_states
+    remove_state_from_graph, parse_query, convert_to_state, get_state_from_graph
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _State, \
     _CurrentState
@@ -36,10 +36,9 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
 
     def sample(self, state, action):
         state = check_state(self.model_id, state)
-        out = parse_query(self.graph, self.sample_query, state, action, remove_cache=False)
-        result_state_uri = [a.sample for a in out][0]
-        # Does not return OO State
-        result_state = convert_to_states(self.graph, result_state_uri)  # this should not be barely returning a state
+        out = parse_query(self.graph, self.sample_query, state, action, remove_cache=False)  # construct query result
+        sample_graph = out.graph  # graph from the construct query
+        result_state = convert_to_state(sample_graph)  # this should not be barely returning a state
         return result_state  # Send some sample state
 
     def argmax(self, state, action):
@@ -51,7 +50,7 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
         state = check_state(self.model_id, state)
         out = parse_query(self.graph, self.argmax_query, state, action)
         result_state_uri = [a.argmax for a in out][0]
-        return convert_to_states(self.graph, result_state_uri)
+        return get_state_from_graph(self.graph, result_state_uri)
 
     # region Helper Functions
 

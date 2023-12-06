@@ -1,6 +1,7 @@
 import pomdp_py
 from rdflib import Graph, Seq, RDF, Literal, BNode
 
+from POMDPService.ajan_pomdp_planning.helpers.converters import get_value_to_graph_literal
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _State, _Type, _Id, pomdp_ns, \
     _Attributes, _OOState, _Name
 
@@ -33,7 +34,7 @@ class AjanAgentState(pomdp_py.ObjectState):
         attributes_node = BNode()
         self.graph.add((state_subject, _Attributes, attributes_node))
         for key, value in attributes.items():
-            self.graph.add((attributes_node, createIRI(pomdp_ns, key), Literal(value)))
+            self.graph.add((attributes_node, createIRI(pomdp_ns, key), get_value_to_graph_literal(value, self.graph)))
         if debug:
             print(self.graph.serialize(format='turtle'))
         super().__init__('AjanAgent_' + name, attributes)

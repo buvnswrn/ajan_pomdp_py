@@ -8,11 +8,10 @@ from rdflib.namespace import Namespace
 from rdflib.term import Literal
 import math
 
-from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, pomdp_ns
+from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, pomdp_ns, _rdf
 
 namespace = Namespace('http://www.ajan.de/ajan/functions/math-ns#')
 math_distance = rdflib.term.URIRef(namespace + 'distance')
-_rdf = Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 
 
 def distance(ctx: QueryContext, part: CompValue) -> object:

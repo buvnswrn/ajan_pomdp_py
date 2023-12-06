@@ -1,12 +1,32 @@
-import pomdp_py
-from rdflib import Graph
+import sys
 
+import pomdp_py
+from rdflib import Graph, Literal, BNode
+from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _Action, _Attributes, pomdp_ns
+
+gettrace = getattr(sys, 'gettrace', None)
+debug = False
+if gettrace is None:
+    print('No sys.gettrace')
+elif gettrace():
+    print('Hmm, Big Debugger is watching me')
+    debug = True
 
 class AjanAction(pomdp_py.Action):
     def __init__(self, name, attributes=None):
         self.name = name
         self.attributes = attributes
         self.graph = Graph()
+
+        if attributes is not None:
+            action_subject = createIRI(_Action, name)
+            attributes_node = BNode()
+            self.graph.add((action_subject, _Attributes, attributes_node))
+            for key, value in attributes.items():
+                self.graph.add((attributes_node, createIRI(pomdp_ns, key), Literal(value)))
+        if debug:
+            print(self.graph.serialize(format='turtle'))
+        # TODO: add attributes to graph and check them
 
     def __hash__(self):
         return hash(self.name)

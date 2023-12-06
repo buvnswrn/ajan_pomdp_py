@@ -4,6 +4,7 @@ pomdp_ns = Namespace("http://www.dfki.de/pomdp-ns#")
 pomdp_ns1 = Namespace("http://www.dfki.de/pomdp-ns/POMDP/")
 pomdp_data_ns = Namespace("http://www.dfki.de/pomdp-ns/POMDP/data/")
 POMDP = URIRef("http://www.dfki.de/pomdp-ns#POMDP")
+_rdf = Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 
 _OOState = pomdp_ns["OOState"]
 _State = pomdp_ns["State"]
@@ -26,7 +27,13 @@ _CurrentState = pomdp_ns["current_state"]
 _CurrentAction = pomdp_ns["current_action"]
 _Probability = pomdp_ns["probability"]
 _CurrentObservation = pomdp_ns["CurrentObservation"]
+
+# Datatypes
 _Pandas = pomdp_data_ns["pandasDataFrame"]
+_2dVector = pomdp_data_ns["2dVector"]
+_3dVector = pomdp_data_ns["3dVector"]
+
+_Point = pomdp_data_ns["Point"]
 
 
 def createIRI(namespace, _id):
