@@ -1,11 +1,11 @@
 from sys import gettrace
 
-from rdflib import RDF, Graph
+from rdflib import RDF, Graph, BNode
 
-from POMDPService.ajan_pomdp_planning.helpers.converters import get_data_from_graph
+from POMDPService.ajan_pomdp_planning.helpers.converters import get_data_from_graph, get_value_to_graph_literal
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState, AjanEnvObjectState, AjanAgentState
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _State, _CurrentAction, _Action, \
-    _CurrentState, _NextState
+    _CurrentState, _NextState, pomdp_ns, _Attributes
 
 
 def get_state_query(state):
@@ -101,21 +101,32 @@ def get_state_from_graph(graph, state_uri):
     state_type = str(result['type'])
     state_name = str(result['name'])
     state_attributes_node = result['attributes']
+    state_attributes = get_attributes_from_graph(graph, state_attributes_node)
+    if state_type.lower() == "env":
+        result_state = AjanEnvObjectState(state_name, state_id, attributes=state_attributes)
+    elif state_type.lower() == "agent":
+        result_state = AjanAgentState(state_name, state_id, state_attributes)
+    else:
+        raise ValueError("Unknown state type: %s" % state_type)
+    return result_state
+
+
+def add_attributes_to_graph(graph, attributes, state_subject):
+    attributes_node = BNode()
+    graph.add((state_subject, _Attributes, attributes_node))
+    for key, value in attributes.items():
+        graph.add((attributes_node, createIRI(pomdp_ns, key), get_value_to_graph_literal(value, graph)))
+
+
+def get_attributes_from_graph(graph, attributes_node):
     state_attributes = dict()
-    for s, p, o in graph.triples((state_attributes_node, None, None)):
+    for s, p, o in graph.triples((attributes_node, None, None)):
         if gettrace():
             print(s, p, o)
         key = p.split("_")[-1]
         value = get_data_from_graph(o, graph)
         state_attributes[key] = value
-    if state_type.lower() == "env":
-        result_state = AjanEnvObjectState(state_name, state_id, attributes=state_attributes)
-    elif state_type.lower() == "agent":
-        result_state = AjanAgentState(state_name, state_id, state_attributes)
-    # Change: Add name to the state
-    # result_oo_state = AjanOOState({ord(state_name[0]): result_state})  # This should not convert to OOState
-    # result_state = result_oo_state
-    return result_state
+    return state_attributes
 
 
 def convert_to_state(graph: Graph):
