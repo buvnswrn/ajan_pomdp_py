@@ -3,7 +3,7 @@ import sys
 import pomdp_py
 from rdflib import Graph
 
-from POMDPService.ajan_pomdp_planning.helpers.to_graph import add_attributes_to_graph
+import POMDPService.ajan_pomdp_planning.helpers.to_graph as graph_helper
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _Action
 
 gettrace = getattr(sys, 'gettrace', None)
@@ -23,7 +23,7 @@ class AjanAction(pomdp_py.Action):
 
         if attributes is not None:
             action_subject = createIRI(_Action, name)
-            add_attributes_to_graph(self.graph, attributes, action_subject)
+            graph_helper.add_attributes_to_graph(self.graph, attributes, action_subject)
         if debug:
             print(self.graph.serialize(format='turtle'))
         # TODO: add attributes to graph and check them
