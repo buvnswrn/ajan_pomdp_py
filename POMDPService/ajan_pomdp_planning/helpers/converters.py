@@ -11,27 +11,21 @@ from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import _rdf, _2
 
 
 def parse_pandas(graph, o):
+    # TODO: Implement pandas dataframe parsing
     pass
 
 
 def from_2dVector(graph: Graph, o) -> tuple:
-    vector_value = [o for _, _, o in graph.triples((o, RDF.value, None))][0]
-    x_value, y_value = get_vector_x_y(graph, vector_value)
-    return x_value, y_value
-
-
-def get_vector_x_y(graph: Graph, vector_value) -> tuple:
-    x_value = [x for _, _, x in graph.triples((vector_value, _rdf.x, None))][0]
-    y_value = [x for _, _, x in graph.triples((vector_value, _rdf.y, None))][0]
+    x_value = [x for _, _, x in graph.triples((o, _rdf.x, None))][0]
+    y_value = [x for _, _, x in graph.triples((o, _rdf.y, None))][0]
     x_value = get_data_from_graph(x_value)
     y_value = get_data_from_graph(y_value)
     return x_value, y_value
 
 
 def from_3dVector(graph: Graph, vector_node) -> tuple:
-    vector_value = [o for _, _, o in graph.triples((vector_node, RDF.value, None))][0]
-    x_value, y_value = get_vector_x_y(graph, vector_value)
-    z_value = [x for _, _, x in graph.triples((vector_value, _rdf.z, None))][0]
+    x_value, y_value = from_2dVector(graph, vector_node)
+    z_value = [x for _, _, x in graph.triples((vector_node, _rdf.z, None))][0]
     z_value = get_data_from_graph(z_value)
     return x_value, y_value, z_value
 
@@ -79,11 +73,13 @@ def to_GraphDataFrame(graph: Graph, df: DataFrame, row_name_starter: URIRef = No
 
 
 def get_data_from_graph(o: Union[Literal, BNode, Any], graph: Graph = None) -> Union[
-    ndarray, DataFrame, str, int, float, bool, tuple]:
+    ndarray, DataFrame, str, int, float, bool, tuple, None]:
     if type(o) is Literal:
         dt = rdflib.term.XSDToPython[o.datatype]
         if dt is not None:
             return dt(o)
+        else:
+            return str(o)
     elif type(o) is BNode:
         for _, _, data_type in graph.triples((o, RDF.type, None)):
             if data_type == _Pandas:
@@ -92,6 +88,8 @@ def get_data_from_graph(o: Union[Literal, BNode, Any], graph: Graph = None) -> U
                 return from_2dVector(graph, o)
             elif data_type == _3dVector:
                 return from_3dVector(graph, o)
+    elif o == RDF.nil:
+        return None
     else:
         return str(o)
 
@@ -99,6 +97,8 @@ def get_data_from_graph(o: Union[Literal, BNode, Any], graph: Graph = None) -> U
 def get_value_to_graph_literal(o, graph=None):
     if type(o) in [int, float, bool, str]:
         return Literal(o)
+    elif o is None:
+        return RDF.nil
     elif type(o) is tuple:
         if len(o) == 2:
             return to_2dVector(graph, o[0], o[1])

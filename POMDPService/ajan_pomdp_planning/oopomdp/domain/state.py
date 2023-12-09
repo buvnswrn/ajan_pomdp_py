@@ -3,7 +3,7 @@ import sys
 import pomdp_py
 from rdflib import Graph, Seq, RDF, Literal
 
-from POMDPService.ajan_pomdp_planning.helpers.to_graph import add_attributes_to_graph
+import POMDPService.ajan_pomdp_planning.helpers.to_graph as graph_helper
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _State, _Type, _Id, _OOState, _Name
 
 gettrace = getattr(sys, 'gettrace', None)
@@ -30,7 +30,7 @@ class AjanAgentState(pomdp_py.ObjectState):
             attributes = {**attributes, **{"id": agent_id}}
         else:
             attributes = {"id": agent_id}
-        add_attributes_to_graph(self.graph, attributes, state_subject)
+        graph_helper.add_attributes_to_graph(self.graph, attributes, state_subject)
         if debug:
             print(self.graph.serialize(format='turtle'))
         super().__init__('AjanAgent_' + name, attributes)
@@ -62,7 +62,7 @@ class AjanEnvObjectState(pomdp_py.ObjectState):
             attributes = {**attributes, **{"id": obj_id}}
         else:
             attributes = {"id": obj_id}
-        add_attributes_to_graph(self.graph, attributes, state_subject)
+        graph_helper.add_attributes_to_graph(self.graph, attributes, state_subject)
         if debug:
             print(self.graph.serialize(format='turtle'))
         super().__init__("AjanEnv_" + objclass, attributes)

@@ -36,7 +36,7 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
 
     def sample(self, state, action):
         state = check_state(self.model_id, state)
-        out = parse_query(self.graph, self.sample_query, state, action, remove_cache=False)  # construct query result
+        out = parse_query(self.graph, self.sample_query, state, action)  # construct query result
         sample_graph = out.graph  # graph from the construct query
         result_state = convert_to_state(sample_graph)  # this should not be barely returning a state
         return result_state  # Send some sample state
@@ -49,8 +49,9 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
         return self.convert_to_states(out.argmax)
         state = check_state(self.model_id, state)
         out = parse_query(self.graph, self.argmax_query, state, action)
-        result_state_uri = [a.argmax for a in out][0]
-        return get_state_from_graph(self.graph, result_state_uri)
+        argmax_graph = out.graph
+        result_state = convert_to_state(argmax_graph)
+        return result_state
 
     # region Helper Functions
 

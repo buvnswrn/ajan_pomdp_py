@@ -123,7 +123,7 @@ def get_attributes_from_graph(graph, attributes_node):
     for s, p, o in graph.triples((attributes_node, None, None)):
         if gettrace():
             print(s, p, o)
-        key = p.split("_")[-1]
+        key = p.split("/_")[-1]
         value = get_data_from_graph(o, graph)
         state_attributes[key] = value
     return state_attributes
