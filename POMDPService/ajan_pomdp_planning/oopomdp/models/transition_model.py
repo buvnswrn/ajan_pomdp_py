@@ -27,9 +27,6 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
         next_state = check_state(self.model_id, next_state)
 
         # add the corresponding data to the graph to query them
-        self.graph.add((pomdp_ns['state'], RDF.value,
-                        pomdp_ns[state]))
-        out = self.parse_query(self.probability_query, state, action, next_state)
         out = parse_query(self.graph, self.probability_query, state, action, next_state)
         # Update the observation, next_state, action to the local graph
         return float(out.bindings[0]['probability'])
@@ -42,11 +39,6 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
         return result_state  # Send some sample state
 
     def argmax(self, state, action):
-        if self.argmax_query == "sample":
-            return self.sample(state, action)
-        state = self.check_state(state)
-        out = self.parse_query(self.argmax_query, state, action)
-        return self.convert_to_states(out.argmax)
         state = check_state(self.model_id, state)
         out = parse_query(self.graph, self.argmax_query, state, action)
         argmax_graph = out.graph
