@@ -29,6 +29,12 @@ _CurrentReward = pomdp_ns["current_reward"]
 _Probability = pomdp_ns["probability"]
 _CurrentObservation = pomdp_ns["CurrentObservation"]
 
+
+_ObservationModel = pomdp_ns["ObservationModel"]
+_TransitionModel = pomdp_ns["TransitionModel"]
+_RewardModel = pomdp_ns["RewardModel"]
+_PolicyModel = pomdp_ns["PolicyModel"]
+
 # Datatypes
 _Pandas = pomdp_data_ns["pandasDataFrame"]
 _2dVector = pomdp_data_ns["2dVector"]

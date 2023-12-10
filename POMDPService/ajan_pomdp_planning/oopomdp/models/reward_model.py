@@ -1,7 +1,10 @@
 import pomdp_py
-from rdflib import Graph, RDF, Seq
-from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import pomdp_ns, _CurrentState, _NextState, createIRI, \
-    _State, _CurrentAction, _Action
+from rdflib import Graph, RDF, Seq, Literal
+
+import POMDPService.ajan_pomdp_planning.helpers.to_graph as graph_helper
+from POMDPService.ajan_pomdp_planning.helpers.to_graph import parse_query
+from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import _CurrentState, _NextState, createIRI, \
+    _State, _CurrentAction, _Action, _CurrentReward, _RewardModel
 
 
 class AjanRewardModel(pomdp_py.RewardModel):
@@ -9,29 +12,30 @@ class AjanRewardModel(pomdp_py.RewardModel):
         self.graph = Graph()
         self.graph.parse(data=data)
         self.attributes = attributes
+        self.attribute_node = graph_helper.add_attributes_to_graph(self.graph, attributes, _RewardModel)
         self.probability_query = probability_query
         self.argmax_query = argmax_query
         self.sample_query = sample_query
 
     def probability(self, reward, state, action, next_state):
-        self.graph.add((pomdp_ns['reward'], RDF.value,
-                        pomdp_ns[reward]))
-        out = self.parse_query(self.probability_query, next_state, action)
+        # Add the variables to the current graph
+        self.graph.add((_CurrentReward, RDF.value, Literal(reward)))
+        out = parse_query(self.graph, self.probability_query, state, action, next_state)
+
+        # Remove the variables from the current graph
+        self.graph.remove((_CurrentReward, RDF.value, Literal(reward)))
         # Update the observation, next_state, action to the local graph
-        return out.probability
+        return float(out.bindings[0]['probability'])
 
     def sample(self, state, action, next_state):
-        if self.sample_query == "argmax":
-            return self.argmax(state, action, next_state)
-        out = self.parse_query(self.sample_query, state, action, next_state)
-        return float([a.sample for a in out][0])
+        out = parse_query(self.graph, self.sample_query, state, action, next_state)
+        return float(out.bindings[0]['sample'])
 
     def argmax(self, state, action, next_state):
-        if self.argmax_query == "sample":
-            return self.sample(state, action, next_state)
-        out = self.parse_query(self.argmax_query, state, action, next_state)
-        return float([a.argmax for a in out][0])
+        out = parse_query(self.graph, self.argmax_query, state, action, next_state)
+        return float(out.bindings[0]['argmax'])
 
+    # region Helper Functions
     def remove_oo_state_from_graph(self, state):
         for key, value in state.object_states.items():
             self.graph -= value.graph
@@ -65,3 +69,5 @@ class AjanRewardModel(pomdp_py.RewardModel):
             if next_state is not None:
                 self.remove_oo_state_from_graph(next_state)
         return out
+
+    # endregion
