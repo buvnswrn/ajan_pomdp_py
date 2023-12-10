@@ -3,7 +3,7 @@ from sys import gettrace
 from rdflib import RDF, Graph, BNode
 
 from POMDPService.ajan_pomdp_planning.helpers.converters import get_data_from_graph, get_value_to_graph_literal
-from POMDPService.ajan_pomdp_planning.oopomdp.domain.action import AjanAction
+import POMDPService.ajan_pomdp_planning.oopomdp.domain.action as _action_helper
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState, AjanEnvObjectState, AjanAgentState
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _State, _CurrentAction, _Action, \
     _CurrentState, _NextState, pomdp_ns, _Attributes
@@ -136,7 +136,7 @@ def get_action_from_graph(graph, action_uri, fetch_multiple=False):
     out = graph.query(get_action_query(action_uri))
     action_name = action_uri.split("/Action_")[-1]
     if len(out.bindings) == 0:
-        return AjanAction(action_name)
+        return _action_helper.AjanAction(action_name)
     if fetch_multiple:
         results = list(set(out.bindings))
     else:
@@ -145,7 +145,7 @@ def get_action_from_graph(graph, action_uri, fetch_multiple=False):
     for result in results:
         action_attributes_node = result['attributes']
         action_attributes = get_attributes_from_graph(graph, action_attributes_node)
-        action = AjanAction(action_name, action_attributes if len(action_attributes) > 0 else None)
+        action = _action_helper.AjanAction(action_name, action_attributes if len(action_attributes) > 0 else None)
         result_actions.append(action)
     action = result_actions[0] if not fetch_multiple else result_actions
     return action
