@@ -1,7 +1,7 @@
 import sys
 
 import pomdp_py
-from rdflib import Graph, Seq, RDF, Literal
+from rdflib import Graph, RDF, Literal
 
 import POMDPService.ajan_pomdp_planning.helpers.to_graph as graph_helper
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _State, _Type, _Id, _OOState, _Name
@@ -21,20 +21,19 @@ class AjanAgentState(pomdp_py.ObjectState):
             to_print = ['id']
         self.to_print = frozenset(to_print)
         self.graph = Graph()
-        state_subject = createIRI(_State, agent_id)
-        self.graph.add((state_subject, RDF.type, _State))
-        self.graph.add((state_subject, _Type, Literal("Agent")))
-        self.graph.add((state_subject, _Id, Literal(agent_id)))
-        self.graph.add((state_subject, _Name, Literal(name)))
+        self.state_subject = createIRI(_State, agent_id)
+        self.graph.add((self.state_subject, RDF.type, _State))
+        self.graph.add((self.state_subject, _Type, Literal("Agent")))
+        self.graph.add((self.state_subject, _Id, Literal(agent_id)))
+        self.graph.add((self.state_subject, _Name, Literal(name)))
         if attributes is not None:
             attributes = {**attributes, **{"id": agent_id}}
         else:
             attributes = {"id": agent_id}
-        self.attributes_node = graph_helper.add_attributes_to_graph(self.graph, attributes, state_subject)
+        self.attributes_node = graph_helper.add_attributes_to_graph(self.graph, attributes, self.state_subject)
         if debug:
             print(self.graph.serialize(format='turtle'))
         super().__init__('AjanAgent_' + name, attributes)
-
 
     def __str__(self):
         attr_to_print = str(self.attributes['id'])
@@ -53,16 +52,16 @@ class AjanEnvObjectState(pomdp_py.ObjectState):
             to_print = ['id']
         self.to_print = frozenset(to_print)
         self.graph = Graph()
-        state_subject = createIRI(_State, obj_id)
-        self.graph.add((state_subject, RDF.type, _State))
-        self.graph.add((state_subject, _Type, Literal("Env")))
-        self.graph.add((state_subject, _Id, Literal(obj_id)))
-        self.graph.add((state_subject, _Name, Literal(objclass)))
+        self.state_subject = createIRI(_State, obj_id)
+        self.graph.add((self.state_subject, RDF.type, _State))
+        self.graph.add((self.state_subject, _Type, Literal("Env")))
+        self.graph.add((self.state_subject, _Id, Literal(obj_id)))
+        self.graph.add((self.state_subject, _Name, Literal(objclass)))
         if attributes is not None:
             attributes = {**attributes, **{"id": obj_id}}
         else:
             attributes = {"id": obj_id}
-        self.attributes_node = graph_helper.add_attributes_to_graph(self.graph, attributes, state_subject)
+        self.attributes_node = graph_helper.add_attributes_to_graph(self.graph, attributes, self.state_subject)
         if debug:
             print(self.graph.serialize(format='turtle'))
         super().__init__("AjanEnv_" + objclass, attributes)
@@ -80,14 +79,24 @@ class AjanEnvObjectState(pomdp_py.ObjectState):
 
 class AjanOOState(pomdp_py.OOState):
     def __init__(self, object_states: dict):
-        self.graph = Graph()
+        self.attributes = dict()
+        self.attributes['id'] = ""
         states = list()
+
+        self.graph = Graph()
+
         for key, value in object_states.items():
-            state_subject = createIRI(_State, value.attributes['id'])
-            states.append(state_subject)
+            _id = value.attributes['id']
+            self.attributes['id'] += str(_id) + "_"
+        self.attributes['id'] = self.attributes['id'][:-1]
+        self.state_subject = createIRI(_OOState, self.attributes['id'])
+        self.graph.add((self.state_subject, RDF.type, _OOState))
+        self.graph.add((self.state_subject, _Id, Literal(self.attributes['id'])))
+        for key, value in object_states.items():
+            states.append(value.state_subject)
             self.graph += value.graph
-            # self.graph -= value.graph
-        self.rdf_seq = Seq(self.graph, _OOState, states)
+            self.graph.add((self.state_subject, RDF.value, value.state_subject))
+
         if debug:
             print(self.graph.serialize(format='turtle'))
 

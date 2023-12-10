@@ -64,11 +64,14 @@ def get_action_query(action):
 
 
 def add_state_to_graph(graph, state, namespace):
-    state_subject = createIRI(_State, state.attributes['id'])
-    graph.add((namespace, RDF.value, state_subject))
+    graph.add((namespace, RDF.value, state.state_subject))
     graph += state.graph
     # add the type to the attributes node so that we can query it
-    graph.add((state.attributes_node, RDF.type, namespace))
+    if not type(state) == AjanOOState:
+        graph.add((state.attributes_node, RDF.type, namespace))
+    else:
+        for key, value in state.object_states.items():
+            graph.add((value.attributes_node, RDF.type, namespace))
     return graph
 
 
@@ -89,7 +92,8 @@ def remove_state_from_graph(graph, state, namespace):
     graph.remove((namespace, RDF.value, createIRI(_State, state.attributes['id'])))
     graph -= state.graph
     # add the type to the attributes node so that we can query it
-    graph.remove((state.attributes_node, RDF.type, namespace))
+    if type(state) != AjanOOState:
+        graph.remove((state.attributes_node, RDF.type, namespace))
     return graph
 
 
