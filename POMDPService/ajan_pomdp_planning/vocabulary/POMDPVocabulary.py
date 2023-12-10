@@ -25,6 +25,7 @@ _Attributes = pomdp_ns["attributes"]
 _NextState = pomdp_ns["next_state"]
 _CurrentState = pomdp_ns["current_state"]
 _CurrentAction = pomdp_ns["current_action"]
+_CurrentReward = pomdp_ns["current_reward"]
 _Probability = pomdp_ns["probability"]
 _CurrentObservation = pomdp_ns["CurrentObservation"]
 
