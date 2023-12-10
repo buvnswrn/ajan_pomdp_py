@@ -67,6 +67,8 @@ def add_state_to_graph(graph, state, namespace):
     state_subject = createIRI(_State, state.attributes['id'])
     graph.add((namespace, RDF.value, state_subject))
     graph += state.graph
+    # add the type to the attributes node so that we can query it
+    graph.add((state.attributes_node, RDF.type, namespace))
     return graph
 
 
@@ -86,6 +88,8 @@ def check_state(model_id, state):
 def remove_state_from_graph(graph, state, namespace):
     graph.remove((namespace, RDF.value, createIRI(_State, state.attributes['id'])))
     graph -= state.graph
+    # add the type to the attributes node so that we can query it
+    graph.remove((state.attributes_node, RDF.type, namespace))
     return graph
 
 
@@ -156,6 +160,7 @@ def add_attributes_to_graph(graph, attributes, state_subject):
     graph.add((state_subject, _Attributes, attributes_node))
     for key, value in attributes.items():
         graph.add((attributes_node, createIRI(pomdp_ns, key), get_value_to_graph_literal(value, graph)))
+    return attributes_node
 
 
 def get_attributes_from_graph(graph, attributes_node):

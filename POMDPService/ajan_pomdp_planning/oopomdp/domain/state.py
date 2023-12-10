@@ -30,7 +30,7 @@ class AjanAgentState(pomdp_py.ObjectState):
             attributes = {**attributes, **{"id": agent_id}}
         else:
             attributes = {"id": agent_id}
-        graph_helper.add_attributes_to_graph(self.graph, attributes, state_subject)
+        self.attributes_node = graph_helper.add_attributes_to_graph(self.graph, attributes, state_subject)
         if debug:
             print(self.graph.serialize(format='turtle'))
         super().__init__('AjanAgent_' + name, attributes)
@@ -62,7 +62,7 @@ class AjanEnvObjectState(pomdp_py.ObjectState):
             attributes = {**attributes, **{"id": obj_id}}
         else:
             attributes = {"id": obj_id}
-        graph_helper.add_attributes_to_graph(self.graph, attributes, state_subject)
+        self.attributes_node = graph_helper.add_attributes_to_graph(self.graph, attributes, state_subject)
         if debug:
             print(self.graph.serialize(format='turtle'))
         super().__init__("AjanEnv_" + objclass, attributes)
