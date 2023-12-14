@@ -1,3 +1,4 @@
+import numpy as np
 import rdflib
 from rdflib import Graph
 from rdflib.plugins.sparql.evaluate import evalPart
@@ -12,6 +13,7 @@ from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIR
 
 namespace = Namespace('http://www.ajan.de/ajan/functions/math-ns#')
 math_distance = rdflib.term.URIRef(namespace + 'distance')
+sample = rdflib.term.URIRef(namespace + 'sample')
 
 
 def distance(ctx: QueryContext, part: CompValue) -> object:
@@ -64,6 +66,58 @@ def distance(ctx: QueryContext, part: CompValue) -> object:
                     # Calculate the distance
                     evaluation = Literal(math.dist(point1, point2))
                     # evaluation = Literal(val1-val2)
+
+                else:
+                    # raise NotImplementedError() so other functions can execute
+                    raise NotImplementedError()
+            else:
+                evaluation = _eval(part.expr, c.forget(ctx, _except=part._vars))
+                if isinstance(evaluation, SPARQLError):
+                    raise evaluation
+            cs.append(c.merge({part.var: evaluation}))
+        return cs
+
+    raise NotImplementedError()
+
+
+def sample_values(ctx: QueryContext, part: CompValue) -> object:
+    """
+    The first three variables retrieved from a SPARQL query are used to draw samples from a uniform distribution.
+
+    Example:
+
+    Query:
+        PREFIX ajan-math: <http://www.ajan.de/ajan/functions/math-ns#>     # Note: this part references to the custom function
+
+        SELECT ?low ?high ?distance WHERE {
+          BIND(1.0 AS ?low)
+          BIND(2.0 AS ?high)
+          BIND(ajan-math:sample(?low, ?high) AS ?sample)
+        }
+
+    Return the Euclidean distance between two points p and q.
+    Roughly equivalent to:
+        sqrt(sum((px - qx) ** 2.0 for px, qx in zip(p, q)))
+
+    :param ctx:     <class 'rdflib.plugins.sparql.sparql.QueryContext'>
+    :param part:    <class 'rdflib.plugins.sparql.parserutils.CompValue'>
+    :return:        <class 'rdflib.plugins.sparql.processor.SPARQLResult'>
+    """
+
+    if part.name == "Extend":
+        cs = []
+        # Information is retrieved and stored and passed through a generator
+        for c in evalPart(ctx, part.p):
+            # Checks if the function holds an internationalized resource identifier
+            if hasattr(part.expr, 'iri'):
+                # Check for the distance function IRI
+                if part.expr.iri == sample:
+                    points1 = int(_eval(part.expr.expr[0], c.forget(ctx, _except=part.expr._vars)))  # low
+                    points2 = int(_eval(part.expr.expr[1], c.forget(ctx, _except=part.expr._vars)))  # high
+                    # TODO: Fix this one with the correct values.
+                    #  i.e. the values should be in the range of reference points
+                    x_values = np.random.uniform(points1, points2)
+                    evaluation = Literal(x_values)
 
                 else:
                     # raise NotImplementedError() so other functions can execute
