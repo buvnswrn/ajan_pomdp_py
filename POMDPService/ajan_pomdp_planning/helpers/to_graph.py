@@ -4,9 +4,10 @@ from rdflib import RDF, Graph, BNode
 
 from POMDPService.ajan_pomdp_planning.helpers.converters import get_data_from_graph, get_value_to_graph_literal
 import POMDPService.ajan_pomdp_planning.oopomdp.domain.action as _action_helper
+from POMDPService.ajan_pomdp_planning.oopomdp.domain.observation import AjanObservation
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState, AjanEnvObjectState, AjanAgentState
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _State, _CurrentAction, _Action, \
-    _CurrentState, _NextState, pomdp_ns, _Attributes
+    _CurrentState, _NextState, pomdp_ns, _Attributes, _CurrentObservation, _Observation
 
 
 def get_state_query(state):
@@ -63,6 +64,23 @@ def get_action_query(action):
     return query
 
 
+def get_observation_query(observation):
+    query = """PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
+    PREFIX rdfs:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+    SELECT ?attributes ?for_hash
+    WHERE {
+        {
+        BIND (<""" + str(observation) + """> as ?observation)
+        }
+        ?observation (pomdp-ns:|!pomdp-ns:)* ?s .
+        ?observation pomdp-ns:attributes ?attributes .
+        ?observation pomdp-ns:for_hash ?for_hash .
+        ?s ?p ?o .
+        }"""
+    return query
+
+
 def add_state_to_graph(graph, state, namespace):
     graph.add((namespace, RDF.value, state.state_subject))
     graph += state.graph
@@ -72,6 +90,12 @@ def add_state_to_graph(graph, state, namespace):
     else:
         for key, value in state.object_states.items():
             graph.add((value.attributes_node, RDF.type, namespace))
+    return graph
+
+
+def add_observation_to_graph(graph, observation, namespace):
+    graph.add((namespace, RDF.value, observation.observation_subject))
+    graph += observation.graph
     return graph
 
 
@@ -103,13 +127,15 @@ def remove_action_from_graph(graph, action):
     return graph
 
 
-def parse_query(graph, query, state, action=None, next_state=None, remove_cache=True):
+def parse_query(graph, query, state=None, action=None, next_state=None, observation=None, remove_cache=True):
     if action is not None:
         graph = add_action_to_graph(graph, action)
     if state is not None:
         graph = add_state_to_graph(graph, state, _CurrentState)  # removed oo state since we do not need it.
     if next_state is not None:
         graph = add_state_to_graph(graph, next_state, _NextState)  # removed oo state since we do not need it.
+    if observation is not None:
+        graph = add_observation_to_graph(graph, observation, _CurrentObservation)
     out = graph.query(query)
     print("out", out.bindings)
     # result_state = [a[key_value] for a in out][0]
@@ -159,6 +185,16 @@ def get_action_from_graph(graph, action_uri, fetch_multiple=False):
     return action
 
 
+def get_observation_from_graph(graph, observation_uri):
+    out = graph.query(get_observation_query(observation_uri))
+    result = out.bindings[0]
+    observation_attributes_node = result['attributes']
+    observation_for_hash = result['for_hash']
+    observation_attributes = get_attributes_from_graph(graph, observation_attributes_node)
+    for_hash = get_for_hash_from_graph(graph, observation_for_hash)
+    result_observation = AjanObservation(observation_attributes, for_hash)
+    return result_observation
+
 def add_attributes_to_graph(graph, attributes, state_subject):
     attributes_node = BNode()
     graph.add((state_subject, _Attributes, attributes_node))
@@ -178,6 +214,13 @@ def get_attributes_from_graph(graph, attributes_node):
     return state_attributes
 
 
+def get_for_hash_from_graph(graph, for_hash_node):
+    for_hash = list()
+    for s, p, o in graph.triples((for_hash_node, RDF.value, None)):
+        for_hash.append(str(o))
+    return for_hash
+
+
 def convert_to_state(graph: Graph):
     state_uri = [o for o in graph.objects(_State, RDF.value)][0]
     return get_state_from_graph(graph, state_uri)
@@ -186,6 +229,10 @@ def convert_to_state(graph: Graph):
 def convert_to_action(graph: Graph):
     action_uri = [o for o in graph.objects(_Action, RDF.value)][0]
     return get_action_from_graph(graph, action_uri)
+
+
+def convert_to_observation(graph: Graph):
+    return get_observation_from_graph(graph, _Observation)
 
 
 def convert_to_actions(graph: Graph):

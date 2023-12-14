@@ -1,5 +1,8 @@
 import pomdp_py
 from rdflib import Graph
+import POMDPService.ajan_pomdp_planning.helpers.to_graph as graph_helper
+
+from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import _Observation
 
 
 class AjanObservation(pomdp_py.Observation):
@@ -7,6 +10,9 @@ class AjanObservation(pomdp_py.Observation):
         self.attributes = attributes
         self.for_hash = for_hash
         self.graph = Graph()
+        self.observation_subject = _Observation
+        if attributes is not None:
+            graph_helper.add_attributes_to_graph(self.graph, attributes, self.observation_subject)
 
     def __hash__(self):
         hash_list = list()
