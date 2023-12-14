@@ -10,9 +10,14 @@ from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import _rdf, _2
     _Point
 
 
-def parse_pandas(graph, o):
-    # TODO: Implement pandas dataframe parsing
-    pass
+def parse_pandas(graph: Graph, o):
+    # TODO:Have to remove the Point names or include them in creation of pandas graph entry
+    temp_graph = Graph()
+
+    points = sorted(set([o for _, _, o in graph.triples((o, RDF.value, None))]))
+    for point in points:
+        temp_graph += graph.triples((point, None, None))
+    return rdfpandas.to_dataframe(temp_graph)
 
 
 def from_2dVector(graph: Graph, o) -> tuple:
@@ -59,10 +64,8 @@ def to_GraphDataFrame(graph: Graph, df: DataFrame, row_name_starter: URIRef = No
     elif col_dim == 3:
         df.columns = [_rdf.x, _rdf.y, _rdf.z]
 
-    row_value = BNode()
     for i in range(row_dim):
-        graph.add((row_value, RDF.value, createIRI(_Point if row_name_starter is None else row_name_starter, i)))
-    graph.add((df_value, RDF.value, row_value))
+        graph.add((df_value, RDF.value, createIRI(_Point if row_name_starter is None else row_name_starter, i)))
 
     df.index = [createIRI(_Point, i) for i in range(row_dim)]
 
