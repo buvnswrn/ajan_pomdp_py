@@ -4,7 +4,7 @@ from rdflib import RDF, Graph, BNode
 
 from POMDPService.ajan_pomdp_planning.helpers.converters import get_data_from_graph, get_value_to_graph_literal
 import POMDPService.ajan_pomdp_planning.oopomdp.domain.action as _action_helper
-from POMDPService.ajan_pomdp_planning.oopomdp.domain.observation import AjanObservation
+import POMDPService.ajan_pomdp_planning.oopomdp.domain.observation as _observation_helper
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState, AjanEnvObjectState, AjanAgentState
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _State, _CurrentAction, _Action, \
     _CurrentState, _NextState, pomdp_ns, _Attributes, _CurrentObservation, _Observation
@@ -192,8 +192,9 @@ def get_observation_from_graph(graph, observation_uri):
     observation_for_hash = result['for_hash']
     observation_attributes = get_attributes_from_graph(graph, observation_attributes_node)
     for_hash = get_for_hash_from_graph(graph, observation_for_hash)
-    result_observation = AjanObservation(observation_attributes, for_hash)
+    result_observation = _observation_helper.AjanObservation(observation_attributes, for_hash)
     return result_observation
+
 
 def add_attributes_to_graph(graph, attributes, state_subject):
     attributes_node = BNode()

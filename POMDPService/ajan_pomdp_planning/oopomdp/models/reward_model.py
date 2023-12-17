@@ -11,8 +11,9 @@ class AjanRewardModel(pomdp_py.RewardModel):
     def __init__(self, data, attributes, probability_query, sample_query, argmax_query):
         self.graph = Graph()
         self.graph.parse(data=data)
-        self.attributes = attributes
-        self.attribute_node = graph_helper.add_attributes_to_graph(self.graph, attributes, _RewardModel)
+        if attributes is not None:
+            self.attributes = attributes
+            self.attribute_node = graph_helper.add_attributes_to_graph(self.graph, attributes, _RewardModel)
         self.probability_query = probability_query
         self.argmax_query = argmax_query
         self.sample_query = sample_query
