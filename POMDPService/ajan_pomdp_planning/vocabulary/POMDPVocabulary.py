@@ -17,6 +17,7 @@ _RewardFunction = pomdp_ns["RewardFunction"]
 _Policy = pomdp_ns["Policy"]
 _Belief = pomdp_ns["Belief"]
 _BeliefState = pomdp_ns["BeliefState"]
+# plannedAction is not needed
 
 _Type = pomdp_ns["type"]
 _Id = pomdp_ns["id"]
@@ -29,6 +30,8 @@ _CurrentReward = pomdp_ns["current_reward"]
 _Probability = pomdp_ns["probability"]
 _CurrentObservation = pomdp_ns["CurrentObservation"]
 
+_To_Print = pomdp_ns["to_print"]
+_For_Hash = pomdp_ns["for_hash"]
 
 _ObservationModel = pomdp_ns["ObservationModel"]
 _TransitionModel = pomdp_ns["TransitionModel"]
@@ -41,6 +44,7 @@ _2dVector = pomdp_data_ns["2dVector"]
 _3dVector = pomdp_data_ns["3dVector"]
 
 _Point = pomdp_data_ns["Point"]
+# Action Selector is not needed.
 
 
 def createIRI(namespace, _id):

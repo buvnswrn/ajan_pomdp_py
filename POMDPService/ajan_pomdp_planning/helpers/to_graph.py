@@ -1,13 +1,13 @@
 from sys import gettrace
 
-from rdflib import RDF, Graph, BNode
+from rdflib import RDF, Graph, BNode, Literal
 
 from POMDPService.ajan_pomdp_planning.helpers.converters import get_data_from_graph, get_value_to_graph_literal
 import POMDPService.ajan_pomdp_planning.oopomdp.domain.action as _action_helper
 import POMDPService.ajan_pomdp_planning.oopomdp.domain.observation as _observation_helper
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState, AjanEnvObjectState, AjanAgentState
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _State, _CurrentAction, _Action, \
-    _CurrentState, _NextState, pomdp_ns, _Attributes, _CurrentObservation, _Observation
+    _CurrentState, _NextState, pomdp_ns, _Attributes, _CurrentObservation, _Observation, _To_Print, _Type, _Id, _Name
 
 
 def get_state_query(state):
@@ -197,10 +197,22 @@ def get_observation_from_graph(graph, observation_uri):
 
 
 def add_attributes_to_graph(graph, attributes, state_subject):
-    attributes_node = BNode()
-    graph.add((state_subject, _Attributes, attributes_node))
+    attributes_node = add_blank_parent_node(graph, _Attributes, state_subject)
     for key, value in attributes.items():
         graph.add((attributes_node, createIRI(pomdp_ns, key), get_value_to_graph_literal(value, graph)))
+    return attributes_node
+
+
+def add_to_list_values_to_graph(graph, to_print, state_subject, namespace=_To_Print):
+    to_print_node = add_blank_parent_node(graph, namespace, state_subject)
+    for key in to_print:
+        graph.add((to_print_node, RDF.value, Literal(key)))
+    return to_print_node
+
+
+def add_blank_parent_node(graph, namespace, state_subject):
+    attributes_node = BNode()
+    graph.add((state_subject, namespace, attributes_node))
     return attributes_node
 
 
@@ -215,11 +227,24 @@ def get_attributes_from_graph(graph, attributes_node):
     return state_attributes
 
 
+def get_attributes_node_from_graph(graph, parent_node):
+    for s, p, o in graph.triples((parent_node, _Attributes, None)):
+        return o
+
+
 def get_for_hash_from_graph(graph, for_hash_node):
     for_hash = list()
     for s, p, o in graph.triples((for_hash_node, RDF.value, None)):
         for_hash.append(str(o))
     return for_hash
+
+
+def get_to_print_from_graph(subject_node, graph: Graph):
+    print_node = [print_node for print_node in graph.objects(subject_node, _To_Print)][0]
+    if print_node == RDF.nil:
+        return None
+    else:
+        return get_for_hash_from_graph(graph, print_node)
 
 
 def convert_to_state(graph: Graph):

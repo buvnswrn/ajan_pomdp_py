@@ -17,20 +17,30 @@ elif gettrace():
 
 class AjanAgentState(pomdp_py.ObjectState):
     def __init__(self, name, agent_id, attributes: dict = None, to_print: list = None):
-        if to_print is None:
-            to_print = ['id']
-        self.to_print = frozenset(to_print)
         self.graph = Graph()
         self.state_subject = createIRI(_State, agent_id)
         self.graph.add((self.state_subject, RDF.type, _State))
         self.graph.add((self.state_subject, _Type, Literal("Agent")))
         self.graph.add((self.state_subject, _Id, Literal(agent_id)))
         self.graph.add((self.state_subject, _Name, Literal(name)))
+        if type(attributes) == str:
+            temp_graph = Graph()
+            temp_graph.parse(data=attributes, format='turtle')
+            self.attributes_node = graph_helper.get_attributes_node_from_graph(temp_graph, self.state_subject)
+            attributes = graph_helper.get_attributes_from_graph(temp_graph, self.attributes_node)
         if attributes is not None:
             attributes = {**attributes, **{"id": agent_id}}
         else:
             attributes = {"id": agent_id}
         self.attributes_node = graph_helper.add_attributes_to_graph(self.graph, attributes, self.state_subject)
+        if type(to_print) == str:
+            temp_graph = Graph()
+            temp_graph.parse(data=to_print, format='turtle')
+            to_print = graph_helper.get_to_print_from_graph(self.state_subject, temp_graph)
+            self.graph += temp_graph
+        if to_print is None:
+            to_print = ['id']
+        self.to_print = frozenset(to_print)
         if debug:
             print(self.graph.serialize(format='turtle'))
         super().__init__('AjanAgent_' + name, attributes)
@@ -48,26 +58,35 @@ class AjanAgentState(pomdp_py.ObjectState):
 
 class AjanEnvObjectState(pomdp_py.ObjectState):
     def __init__(self, objclass, obj_id, attributes: dict = None, to_print: list = None):
-        if to_print is None:
-            to_print = ['id']
-        self.to_print = frozenset(to_print)
         self.graph = Graph()
         self.state_subject = createIRI(_State, obj_id)
         self.graph.add((self.state_subject, RDF.type, _State))
         self.graph.add((self.state_subject, _Type, Literal("Env")))
         self.graph.add((self.state_subject, _Id, Literal(obj_id)))
         self.graph.add((self.state_subject, _Name, Literal(objclass)))
+        if type(attributes) == str:
+            temp_graph = Graph()
+            temp_graph.parse(data=attributes, format='turtle')
+            self.attributes_node = graph_helper.get_attributes_node_from_graph(temp_graph, self.state_subject)
+            attributes = graph_helper.get_attributes_from_graph(temp_graph, self.attributes_node)
+            # self.graph += temp_graph # not needed since it is added below
         if attributes is not None:
             attributes = {**attributes, **{"id": obj_id}}
         else:
             attributes = {"id": obj_id}
         self.attributes_node = graph_helper.add_attributes_to_graph(self.graph, attributes, self.state_subject)
+        if type(to_print) == str:
+            temp_graph = Graph()
+            temp_graph.parse(data=to_print, format='turtle')
+            to_print = graph_helper.get_to_print_from_graph(self.state_subject, temp_graph)
+            # self.graph += temp_graph
+        if to_print is None:
+            to_print = ['id']
+        self.to_print_node = graph_helper.add_to_list_values_to_graph(self.graph, to_print, self.state_subject)
+        self.to_print = frozenset(to_print)
         if debug:
             print(self.graph.serialize(format='turtle'))
         super().__init__("AjanEnv_" + objclass, attributes)
-
-    def add_attribute(self, key, value):
-        pass
 
     def __str__(self):
         attr_to_print = str(self.attributes['id'])

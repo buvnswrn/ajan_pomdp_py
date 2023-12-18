@@ -4,7 +4,9 @@ from typing import Dict, Optional, Tuple, List
 
 class Attributes(BaseModel):
     attributes: dict = None
+    attributes_data: str = None
     to_print: list = None
+    to_print_data: str = None
 
 
 class ProbabilisticModelsData(BaseModel):
@@ -35,6 +37,10 @@ class StateInit(BaseModel):
 class ActionInit(BaseModel):
     pomdp_id: int
     action_name: str
+    attributes: dict = None
+    attributes_data: str = None
+    to_print: list = None
+    to_print_data: str = None
 
 
 class POMDPInit(BaseModel):
