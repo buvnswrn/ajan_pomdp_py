@@ -37,9 +37,10 @@ class AjanAgentState(pomdp_py.ObjectState):
             temp_graph = Graph()
             temp_graph.parse(data=to_print, format='turtle')
             to_print = graph_helper.get_to_print_from_graph(self.state_subject, temp_graph)
-            self.graph += temp_graph
+            # self.graph += temp_graph
         if to_print is None:
             to_print = ['id']
+        self.to_print_node = graph_helper.add_to_list_values_to_graph(self.graph, to_print, self.state_subject)
         self.to_print = frozenset(to_print)
         if debug:
             print(self.graph.serialize(format='turtle'))

@@ -30,7 +30,7 @@ def convert_to_states(p_id: int, belief_dict: List[BeliefPrior]):
     init_belief_dict = {}
     state_prob = {}
     for prior in belief_dict:
-        agent_state = get_state(prior, p_id)
+        agent_state = get_state(prior, p_id, False)
         if not init_belief_dict.keys().__contains__(p_id):
             init_belief_dict[p_id] = {}
         key: str = agent_state.objclass

@@ -15,7 +15,7 @@ def create(state: StateInit):
     return {"name": str(agent), "message": "Agent Creation Successful", "id": id(agent)}
 
 
-def get_state(state, pomdp_id=None):
+def get_state(state, pomdp_id=None, add_to_list_of_states=True):
     if pomdp_id is None:
         pomdp_id = state.pomdp_id
     if state.state.params is None:
@@ -24,7 +24,7 @@ def get_state(state, pomdp_id=None):
     else:
         attributes = state.state.params.attributes
         attributes = attributes if attributes is not None else state.state.params.attributes_data
-        to_print = state.state.params.for_hash
+        to_print = state.state.params.to_print
         to_print = to_print if to_print is not None else state.state.params.to_print_data
     if state.state.type.lower() == "agent":
         agent_state = AjanAgentState(state.state.name, state.state.id, attributes=attributes, to_print=to_print)
@@ -33,13 +33,14 @@ def get_state(state, pomdp_id=None):
                                          to_print=to_print)
     else:
         agent_state = None
-    if agent_state is not None:
-        if not states[pomdp_id].keys().__contains__(state.state.id):
-            states[pomdp_id][state.state.id] = agent_state
+    if add_to_list_of_states:
+        if agent_state is not None:
+            if not states[pomdp_id].keys().__contains__(state.state.id):
+                states[pomdp_id][state.state.id] = agent_state
+            else:
+                raise HTTPException(status_code=406, detail="State ID is already used")
         else:
-            raise HTTPException(status_code=406, detail="State ID is already used")
-    else:
-        raise HTTPException(status_code=406, detail="State cannot be created, Possible types are 'agent', 'env'")
+            raise HTTPException(status_code=406, detail="State cannot be created, Possible types are 'agent', 'env'")
     return agent_state
 
 

@@ -5,8 +5,8 @@ import numpy as np
 import rdflib
 from rdflib.plugins.sparql import CUSTOM_EVALS
 
-from CustomSPARQLFunctions.math import distance, sample_values
-from CustomSPARQLFunctions.semantic_fields import near
+import CustomSPARQLFunctions.math as custom_functions
+import CustomSPARQLFunctions.semantic_fields as semantic_fields
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.action import AjanAction
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.observation import AjanObservation
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanEnvObjectState
@@ -158,9 +158,9 @@ class TestObservationModel(unittest.TestCase):
         self.observation_model = AjanObservationModel("", {"person_id": 102, "epsilon": 1e-9},
                                                       self.probability_query, self.sample_query, self.argmax_query)
 
-        rdflib.plugins.sparql.CUSTOM_EVALS["sample_values"] = sample_values
-        rdflib.plugins.sparql.CUSTOM_EVALS["math_dist"] = distance
-        rdflib.plugins.sparql.CUSTOM_EVALS["semantic_field_near"] = near
+        rdflib.plugins.sparql.CUSTOM_EVALS["sample_values"] = custom_functions.sample_values
+        rdflib.plugins.sparql.CUSTOM_EVALS["math_dist"] = custom_functions.distance
+        rdflib.plugins.sparql.CUSTOM_EVALS["semantic_field_near"] = semantic_fields.near
         self.assertNotEqual(self.observation_model, None, "Observation model should not be none")
 
     def test_probability_perceive(self):

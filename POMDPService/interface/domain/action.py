@@ -13,7 +13,7 @@ def create(action_data: ActionInit):
     action = AjanAction(action_data.action_name,
                         action_data.attributes_data if action_data.attributes is None else action_data.attributes,
                         action_data.to_print_data if action_data.to_print is None else action_data.to_print)
-    if not actions[action_data.pomdp_id].__contains__(action_data.action_name):
+    if not actions[action_data.pomdp_id].__contains__(action):
         actions[action_data.pomdp_id].append(action)
     else:
         raise HTTPException(status_code=406, detail="Action is already created")

@@ -38,7 +38,9 @@ class AjanAction(pomdp_py.Action):
         if for_hash is not None:
             self.for_hash = frozenset(for_hash)
             self.for_hash_node = graph_helper.add_to_list_values_to_graph(self.graph, for_hash,
-                                                                          self.action_subject, _For_Hash)
+                                                                       self.action_subject, _For_Hash)
+        else:
+            self.for_hash = None
         if debug:
             print(self.graph.serialize(format='turtle'))
 
@@ -56,7 +58,7 @@ class AjanAction(pomdp_py.Action):
         return self.name
 
     def __repr__(self):
-        if self.for_hash is None:
+        if self.for_hash is None or self.attributes is None:
             return "AjanAction(%s)" % self.name
         else:
             attr_to_print = self.name

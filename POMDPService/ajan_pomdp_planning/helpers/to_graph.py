@@ -217,6 +217,8 @@ def add_blank_parent_node(graph, namespace, state_subject):
 
 
 def get_attributes_from_graph(graph, attributes_node):
+    if attributes_node == RDF.nil:
+        return None
     state_attributes = dict()
     for s, p, o in graph.triples((attributes_node, None, None)):
         if gettrace():
