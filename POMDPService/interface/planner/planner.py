@@ -4,7 +4,7 @@ import time
 import pomdp_py
 from fastapi import APIRouter
 
-from POMDPService.VariableModels.ResponseModels import CreateResponse
+from POMDPService.VariableModels.ResponseModels import CreateResponse, CreateActionResponse
 from POMDPService.VariableModels.State import PlannerInit, POMDPInit
 from POMDPService.interface.pomdp import planners, problems, last_action
 
@@ -42,12 +42,16 @@ def create_planner(planner_init: PlannerInit):
 
 
 @planner_ns.post("/get-action", summary="Get the planned action", description="Get the action computed by the planner",
-                 response_model=CreateResponse)
+                 response_model=CreateActionResponse)
 def get_action(pomdp: POMDPInit):
     pomdp_id = pomdp.pomdp_id
     start_time = time.time()
     action = planners[pomdp_id].plan(problems[pomdp_id].agent)
     last_action[pomdp_id] = action
     print(str(action) + " in " + str(time.time() - start_time) + " seconds")
-    return CreateResponse(name=str(action), message="Fetched the action", id=id(action))
+    if action.attributes is None:
+        return CreateActionResponse(name=str(action), message="Fetched the action", id=id(action))
+    response = CreateActionResponse(name=str(action), message="Fetched the action", id=id(action),
+                                    attributes=action.attributes, data=action.graph.serialize(format='turtle'))
+    return response
 
