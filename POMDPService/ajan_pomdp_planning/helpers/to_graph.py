@@ -137,7 +137,7 @@ def parse_query(graph, query, state=None, action=None, next_state=None, observat
     if observation is not None:
         graph = add_observation_to_graph(graph, observation, _CurrentObservation)
     out = graph.query(query)
-    print("out", out.bindings)
+    # print("out", out.bindings)
     # result_state = [a[key_value] for a in out][0]
     if remove_cache:
         if action is not None:

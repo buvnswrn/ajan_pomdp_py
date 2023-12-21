@@ -11,7 +11,7 @@ state_ns = APIRouter(prefix="/AJAN/pomdp/state")
                description="Create an agent state with given name and attributes", response_model=CreateResponse)
 def create(state: StateInit):
     agent = get_state(state)
-    print("Initialized:", agent)
+    # print("Initialized:", agent)
     return {"name": str(agent), "message": "Agent Creation Successful", "id": id(agent)}
 
 
@@ -53,7 +53,7 @@ def create(state: StateInit):
         states[state.pomdp_id][state.id] = env_obj
     else:
         raise HTTPException(status_code=406, detail="State ID is already used")
-    print("Initialized:", env_obj)
+    # print("Initialized:", env_obj)
     return {"name": str(env_obj), "message": "Environment Object Created successfully", "id": id(env_obj)}
 
 
