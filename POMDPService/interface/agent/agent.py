@@ -3,15 +3,17 @@ import ctypes
 import rdflib.term
 import rdfpandas
 from fastapi import APIRouter
-from rdflib import Graph, RDF, XSD
+from rdflib import Graph, RDF
 
+import POMDPService.ajan_pomdp_planning.helpers.to_graph as graph_helper
 from POMDPService.VariableModels.ResponseModels import CreateResponse, BooleanResponse
 from POMDPService.VariableModels.State import AgentInit, POMDPInit
 from POMDPService.ajan_pomdp_planning.oopomdp.agent.agent import AjanAgent
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.observation import AjanObservation
 from POMDPService.ajan_pomdp_planning.oopomdp.problem import AjanOOPOMDP, update_belief
-from POMDPService.interface.pomdp import init_beliefs, models, agents, problems, last_action, last_observation, planners
-from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import _CurrentObservation, pomdp_ns1, pomdp_ns, _Type
+from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import pomdp_ns1, _Type, \
+    _Observation
+from POMDPService.interface.pomdp import init_beliefs, models, agents, problems, last_action, planners
 
 agent_ns = APIRouter(prefix="/AJAN/pomdp/agent")
 
@@ -46,7 +48,9 @@ def create_agent(agent_init: AgentInit):
 def belief_update(agent_init: AgentInit):
     pomdp_id = agent_init.pomdp_id
     # Create an observation
-    observation = create_observation(agent_init.data)
+    g.parse(data=agent_init.data)
+    observation = graph_helper.convert_to_observation(g)
+    # observation = create_observation(agent_init.data)
     # Update the belief
     problem: AjanOOPOMDP = problems[pomdp_id]
     update_belief(agents[pomdp_id], last_action[pomdp_id], observation, planners[pomdp_id],
@@ -67,7 +71,9 @@ def clear_history(pomdp: POMDPInit):
 def update_history(pomdp: AgentInit):
     pomdp_id = pomdp.pomdp_id
     # Create and observation and then update the history
-    observation = create_observation(pomdp.data)
+    # observation = create_observation(pomdp.data)
+    g.parse(data=pomdp.data)
+    observation = graph_helper.convert_to_observation(g)
     problem: AjanOOPOMDP = problems[pomdp_id]
     problem.agent.update_history(last_action[pomdp_id], observation)
     return BooleanResponse(success=True, message="Agent history updated successfully")
@@ -79,7 +85,7 @@ g = Graph()
 def create_observation(data):
     # Create an observation
     g.parse(data=data)
-    keys = [o for s, p, o in g.triples((_CurrentObservation, RDF.value, None))]
+    keys = [o for s, p, o in g.triples((_Observation, RDF.value, None))]
     convert_function = {}
     attributes = {}
     for key in keys:
