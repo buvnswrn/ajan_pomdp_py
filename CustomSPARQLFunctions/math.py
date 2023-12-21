@@ -64,7 +64,7 @@ def distance(ctx: QueryContext, part: CompValue) -> object:
                         point2.append(float(y))
 
                     # Calculate the distance
-                    evaluation = Literal(math.dist(point1, point2))
+                    evaluation = Literal(math.dist(point1, point2)) # Both points should have the same dimensionality
                     # evaluation = Literal(val1-val2)
 
                 else:
@@ -135,6 +135,7 @@ def sample_values(ctx: QueryContext, part: CompValue) -> object:
 if __name__ == "__main__":
     # add function directly, normally we would use setuptools and entry_points
     rdflib.plugins.sparql.CUSTOM_EVALS["math_dist"] = distance
+    rdflib.plugins.sparql.CUSTOM_EVALS["sample_values"] = sample_values
 
     g = Graph()
     point1 = createIRI(pomdp_ns, "keypoint1")
