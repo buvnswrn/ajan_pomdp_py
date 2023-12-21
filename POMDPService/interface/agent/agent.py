@@ -16,6 +16,7 @@ from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import _Current
 agent_ns = APIRouter(prefix="/AJAN/pomdp/agent")
 
 
+# Deprecated
 @agent_ns.post("/create-from-pointers", summary="Create the agent", response_model=CreateResponse)
 def create_agent(agent_init: AgentInit, pointers: bool):
     init_belief = ctypes.cast(agent_init.init_belief, ctypes.py_object).value
@@ -49,7 +50,7 @@ def belief_update(agent_init: AgentInit):
     # Update the belief
     problem: AjanOOPOMDP = problems[pomdp_id]
     update_belief(agents[pomdp_id], last_action[pomdp_id], observation, planners[pomdp_id],
-                  obj_id=ord(agent_init.state_name[0]), state_id=agent_init.state_id)
+                  obj_id=ord(agent_init.state_name[0].lower()), state_id=agent_init.state_id)
     # update_belief(agents[pomdp_id],last_action[pomdp_id], observation, planners[pomdp_id],
     #               obj_id=ord(agent_init.state_name[0]), state_id=agent_init.state_id)
     return CreateResponse(name=str(problem.agent.cur_belief), message="Updated the agent's belief",
