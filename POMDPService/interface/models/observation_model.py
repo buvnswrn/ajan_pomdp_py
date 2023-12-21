@@ -12,5 +12,5 @@ obs_model_ns = APIRouter(prefix="/AJAN/pomdp/observation_model")
 def init_model(model_data: ProbabilisticModelsData):
     model = AjanObservationModel(model_data.data, None, model_data.probability_query, model_data.sample_query,
                                  model_data.argmax_query)
-    models[model_data.pomdp_id]['agent']['observation'][ord(model_data.associated_object_name[0])] = model
+    models[model_data.pomdp_id]['agent']['observation'][ord(model_data.associated_object_name[0].lower())] = model
     return CreateResponse(name="Created", message="Observation Model Created", id=id(model))

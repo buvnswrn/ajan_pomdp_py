@@ -26,7 +26,7 @@ def initialize_belief(p_id: int, belief_dict: dict, representation):
             for state in belief_dict[p_id][objcls]:
                 belief_dict[p_id][objcls][state] /= total_prob
             hist_belief = pomdp_py.Histogram(belief_dict[p_id][objcls])
-            oo_hists[ord(objcls[0])] = hist_belief
+            oo_hists[ord(objcls[0].lower())] = hist_belief
         return AJANOOBelief(p_id, oo_hists)
 
 

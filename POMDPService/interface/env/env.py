@@ -9,6 +9,7 @@ from POMDPService.interface.pomdp import envs, init_states, models, problems, la
 env_ns = APIRouter(prefix="/AJAN/pomdp/env")
 
 
+# deprecated
 @env_ns.post("/create-from-pointers", summary="Create an Environment", response_model=CreateResponse)
 def create_env(env_init: EnvInit):
     init_state = ctypes.cast(env_init.init_state, ctypes.py_object).value
@@ -22,7 +23,7 @@ def create_env(env_init: EnvInit):
 @env_ns.post("/create", summary="Create an Environment", response_model=CreateResponse)
 def create_env(env_init: EnvInit):
     pomdp_id = env_init.pomdp_id
-    data =env_init.data
+    data = env_init.data
     init_state = init_states[pomdp_id]
     transition_model = models[pomdp_id]['env']['transition']
     reward_model = models[pomdp_id]['env']['reward']

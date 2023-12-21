@@ -10,6 +10,7 @@ from POMDPService.interface.pomdp import problems, agents, envs
 problem_ns = APIRouter(prefix="/AJAN/pomdp/problem")
 
 
+# Deprecated
 @problem_ns.post("/create-from-pointers", summary="Create a POMDP Problem", response_model=CreateResponse)
 def create_pomdp_problem(prob_init: POMDPProblemInit):
     agent = ctypes.cast(prob_init.agent, ctypes.py_object).value

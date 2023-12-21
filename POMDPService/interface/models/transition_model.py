@@ -9,7 +9,7 @@ transition_model_ns = APIRouter(prefix="/AJAN/pomdp/transition_model")
 
 @transition_model_ns.post("/create/init-model", summary="Create the transition model", response_model=CreateResponse)
 def init_model(model_data: ProbabilisticModelsData):
-    model_id = ord(model_data.associated_object_name[0])
+    model_id = ord(model_data.associated_object_name[0].lower())
     model = AjanTransitionModel(model_id,
                                 model_data.data, None,
                                 model_data.probability_query,
