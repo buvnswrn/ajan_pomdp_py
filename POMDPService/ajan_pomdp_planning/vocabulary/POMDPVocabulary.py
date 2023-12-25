@@ -17,7 +17,7 @@ _RewardFunction = pomdp_ns["RewardFunction"]
 _Policy = pomdp_ns["Policy"]
 _Belief = pomdp_ns["Belief"]
 _BeliefState = pomdp_ns["BeliefState"]
-# plannedAction is not needed
+_PlannedAction = pomdp_ns["plannedAction"]
 
 _Type = pomdp_ns["type"]
 _Id = pomdp_ns["id"]

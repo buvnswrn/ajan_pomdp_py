@@ -7,7 +7,8 @@ import POMDPService.ajan_pomdp_planning.oopomdp.domain.action as _action_helper
 import POMDPService.ajan_pomdp_planning.oopomdp.domain.observation as _observation_helper
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState, AjanEnvObjectState, AjanAgentState
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _State, _CurrentAction, _Action, \
-    _CurrentState, _NextState, pomdp_ns, _Attributes, _CurrentObservation, _Observation, _To_Print, _Type, _Id, _Name
+    _CurrentState, _NextState, pomdp_ns, _Attributes, _CurrentObservation, _Observation, _To_Print, _Type, _Id, _Name, \
+    _PlannedAction, pomdp_ns1
 
 
 def get_state_query(state):
@@ -261,6 +262,18 @@ def convert_to_action(graph: Graph):
 
 def convert_to_observation(graph: Graph):
     return get_observation_from_graph(graph, _Observation)
+
+
+def convert_to_planned_action_data(graph: Graph, pomdp_id, action: _action_helper.AjanAction):
+    pomdp_id_node = pomdp_ns1[str(pomdp_id)]
+    action_node = createIRI(_Action, str(action))
+    temp_graph = Graph()
+    temp_graph.add((pomdp_id_node, _PlannedAction, action_node))
+    temp_graph += graph
+    if action.attributes is not None:
+        attribute_node = get_attributes_node_from_graph(graph, None)
+        temp_graph.add((attribute_node, RDF.type, _PlannedAction))
+    return temp_graph.serialize(format="turtle")
 
 
 def convert_to_actions(graph: Graph):

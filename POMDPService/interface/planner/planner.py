@@ -7,6 +7,7 @@ from fastapi import APIRouter
 from POMDPService.VariableModels.ResponseModels import CreateResponse, CreateActionResponse
 from POMDPService.VariableModels.State import PlannerInit, POMDPInit
 from POMDPService.interface.pomdp import planners, problems, last_action
+import POMDPService.ajan_pomdp_planning.helpers.to_graph as graph_helper
 
 planner_ns = APIRouter(prefix="/AJAN/pomdp/planner")
 
@@ -50,8 +51,10 @@ def get_action(pomdp: POMDPInit):
     last_action[pomdp_id] = action
     print(str(action) + " in " + str(time.time() - start_time) + " seconds")
     if action.attributes is None:
-        return CreateActionResponse(name=str(action), message="Fetched the action", id=id(action))
+        return CreateActionResponse(name=str(action), message="Fetched the action", id=id(action),
+                                    data=graph_helper.convert_to_planned_action_data(action.graph, pomdp_id, action))
     response = CreateActionResponse(name=str(action), message="Fetched the action", id=id(action),
-                                    attributes=action.attributes, data=action.graph.serialize(format='turtle'))
+                                    attributes=action.attributes,
+                                    data=graph_helper.convert_to_planned_action_data(action.graph, pomdp_id, action))
     return response
 
