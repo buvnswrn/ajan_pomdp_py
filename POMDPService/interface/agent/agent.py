@@ -13,7 +13,7 @@ from POMDPService.ajan_pomdp_planning.oopomdp.domain.observation import AjanObse
 from POMDPService.ajan_pomdp_planning.oopomdp.problem import AjanOOPOMDP, update_belief
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import pomdp_ns1, _Type, \
     _Observation
-from POMDPService.interface.pomdp import init_beliefs, models, agents, problems, last_action, planners
+from POMDPService.interface.pomdp import init_beliefs, models, agents, problems, last_action, planners, last_observation
 
 agent_ns = APIRouter(prefix="/AJAN/pomdp/agent")
 
@@ -49,7 +49,10 @@ def belief_update(agent_init: AgentInit):
     pomdp_id = agent_init.pomdp_id
     # Create an observation
     g.parse(data=agent_init.data)
-    observation = graph_helper.convert_to_observation(g)
+    if last_observation[pomdp_id] is None:
+        observation = graph_helper.convert_to_observation(g)
+    else:
+        observation = last_observation[pomdp_id]
     # observation = create_observation(agent_init.data)
     # Update the belief
     problem: AjanOOPOMDP = problems[pomdp_id]
@@ -74,8 +77,9 @@ def update_history(pomdp: AgentInit):
     # observation = create_observation(pomdp.data)
     g.parse(data=pomdp.data)
     observation = graph_helper.convert_to_observation(g)
+    last_observation[pomdp_id] = observation
     problem: AjanOOPOMDP = problems[pomdp_id]
-    problem.agent.update_history(last_action[pomdp_id], observation)
+    problem.agent.update_history(last_action[pomdp_id], last_observation[pomdp_id])
     return BooleanResponse(success=True, message="Agent history updated successfully")
 
 
