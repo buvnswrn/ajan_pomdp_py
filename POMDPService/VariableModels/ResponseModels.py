@@ -19,3 +19,4 @@ class CreateActionResponse(BaseModel):
 class BooleanResponse(BaseModel):
     success: bool
     message: str = None
+    data: str = None

@@ -16,6 +16,7 @@ agents = {}
 envs = {}
 last_action = {}
 last_observation = {}
+last_env_next_state = {}
 
 
 @pomdp_ns.post("/initialize")

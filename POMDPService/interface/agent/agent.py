@@ -53,6 +53,7 @@ def belief_update(agent_init: AgentInit):
         observation = graph_helper.convert_to_observation(g)
     else:
         observation = last_observation[pomdp_id]
+        last_observation[pomdp_id] = None
     # observation = create_observation(agent_init.data)
     # Update the belief
     problem: AjanOOPOMDP = problems[pomdp_id]

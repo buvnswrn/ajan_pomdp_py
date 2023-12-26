@@ -34,6 +34,13 @@ class StateInit(BaseModel):
     state: State
 
 
+class EnvStateInit(BaseModel):
+    pomdp_id: int
+    state_id: int
+    type: str = None
+    data: str = None  # for update
+
+
 class ActionInit(BaseModel):
     pomdp_id: int
     action_name: str
