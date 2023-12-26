@@ -128,6 +128,12 @@ def remove_action_from_graph(graph, action):
     return graph
 
 
+def remove_observation_from_graph(graph, observation, namespace):
+    graph.remove((namespace, RDF.value, observation.observation_subject))
+    graph -= observation.graph
+    return graph
+
+
 def parse_query(graph, query, state=None, action=None, next_state=None, observation=None, remove_cache=True):
     if action is not None:
         graph = add_action_to_graph(graph, action)
@@ -147,6 +153,8 @@ def parse_query(graph, query, state=None, action=None, next_state=None, observat
             remove_state_from_graph(graph, state, _CurrentState)
         if next_state is not None:
             remove_state_from_graph(graph, next_state, _NextState)
+        if observation is not None:
+            remove_observation_from_graph(graph, observation, _CurrentObservation)
     return out
 
 
