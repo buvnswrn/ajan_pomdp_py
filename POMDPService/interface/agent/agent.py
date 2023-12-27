@@ -61,6 +61,7 @@ def belief_update(agent_init: AgentInit):
                   obj_id=ord(agent_init.state_name[0].lower()), state_id=agent_init.state_id)
     # update_belief(agents[pomdp_id],last_action[pomdp_id], observation, planners[pomdp_id],
     #               obj_id=ord(agent_init.state_name[0]), state_id=agent_init.state_id)
+    g.remove((None, None, None))
     return CreateResponse(name=str(problem.agent.cur_belief), message="Updated the agent's belief",
                           id=id(problem.agent.cur_belief))
 
@@ -81,6 +82,7 @@ def update_history(pomdp: AgentInit):
     last_observation[pomdp_id] = observation
     problem: AjanOOPOMDP = problems[pomdp_id]
     problem.agent.update_history(last_action[pomdp_id], last_observation[pomdp_id])
+    g.remove((None, None, None))
     return BooleanResponse(success=True, message="Agent history updated successfully")
 
 
@@ -98,6 +100,7 @@ def create_observation(data):
             convert_function[get_key_value(str(key))] = get_parse_function(s, o)
         for s, p, value_node in g.triples((key, RDF.value, None)):
             attributes[get_key_value(str(key))] = convert_function[get_key_value(str(key))](value_node)
+    g.remove((None, None, None))
     return AjanObservation(attributes, ['id'])
 
 

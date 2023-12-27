@@ -64,7 +64,14 @@ def distance(ctx: QueryContext, part: CompValue) -> object:
                         point2.append(float(y))
 
                     # Calculate the distance
-                    evaluation = Literal(math.dist(point1, point2)) # Both points should have the same dimensionality
+                    if len(point2) > 2 or len(point1) > 2:
+                        print(graph.serialize(format='turtle'))
+                    # Both points should have the same dimensionality
+                    try:
+                        evaluation = Literal(math.dist(point1, point2))
+                    except ValueError:
+                        raise ValueError("Both points should have the same dimensionality. \n Graph " + graph.serialize(
+                            format='turtle'))
                     # evaluation = Literal(val1-val2)
 
                 else:
