@@ -68,11 +68,10 @@ def to_GraphDataFrame(graph: Graph, df: DataFrame, row_name_starter: URIRef = No
         df.columns = [_rdf.x, _rdf.y]
     elif col_dim == 3:
         df.columns = [_rdf.x, _rdf.y, _rdf.z]
-
-    for i in range(row_dim):
-        graph.add((df_value, RDF.value, createIRI(_Point if row_name_starter is None else row_name_starter, i)))
-
-    df.index = [createIRI(_Point, i) for i in range(row_dim)]
+    if not str(df.index[0]).__contains__(str(_Point)):  # To avoid rewriting the sampled observation indices.
+        for i in range(row_dim):
+            graph.add((df_value, RDF.value, createIRI(_Point if row_name_starter is None else row_name_starter, i)))
+        df.index = [createIRI(_Point, i) for i in range(row_dim)]
 
     g = rdfpandas.to_graph(df)
     graph += g
