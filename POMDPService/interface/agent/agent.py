@@ -83,6 +83,7 @@ def update_history(pomdp: AgentInit):
     pomdp_id = pomdp.pomdp_id
     # Create and observation and then update the history
     # observation = create_observation(pomdp.data)
+    # TODO: when it is not perceive action, the observation has to be sampled from the observation model and be updated.
     g.parse(data=pomdp.data)
     observation = graph_helper.convert_to_observation(g)
     last_observation[pomdp_id] = observation
