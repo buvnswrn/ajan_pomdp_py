@@ -91,12 +91,14 @@ class BeliefPrior(BaseModel):
 class BeliefInit(BaseModel):
     pomdp_id: int
     representation: str
+    agent_id: int = None
     belief_dict: List[BeliefPrior]  # pomdp_id
 
 
 class AgentInit(BaseModel):
     pomdp_id: int
     data: str
+    id: int = None
     state_id: int = None
     state_name: str = None
     init_belief: int = None

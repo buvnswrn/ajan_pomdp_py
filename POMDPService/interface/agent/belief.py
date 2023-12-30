@@ -13,7 +13,7 @@ belief_ns = APIRouter(prefix="/AJAN/pomdp/belief")
 @belief_ns.post("/create/init-belief", summary="Create the initial belief", response_model=CreateResponse)
 def init_belief(belief_dict: BeliefInit):
     belief_states = convert_to_states(belief_dict.pomdp_id, belief_dict.belief_dict)
-    belief = initialize_belief(belief_dict.pomdp_id, belief_states, belief_dict.representation)
+    belief = initialize_belief(belief_dict.pomdp_id,belief_dict.agent_id, belief_states, belief_dict.representation)
     init_beliefs[belief_dict.pomdp_id] = belief
     return {"name": str(belief), "message": "Initial Belief created successfully", "id": id(belief)}
 

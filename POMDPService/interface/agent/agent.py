@@ -39,7 +39,8 @@ def create_agent(agent_init: AgentInit):
     transition_model = models[pomdp_id]['agent']['transition']
     observation_model = models[pomdp_id]['agent']['observation']
     reward_model = models[pomdp_id]['agent']['reward']
-    agent = AjanAgent(agent_init.data, init_belief, policy_model, transition_model, observation_model, reward_model)
+    agent = AjanAgent(agent_init.id, agent_init.data, init_belief,
+                      policy_model, transition_model, observation_model, reward_model)
     agents[pomdp_id] = agent
     return CreateResponse(name=str(agent), message="Created the agent", id=id(agent))
 
@@ -57,8 +58,13 @@ def belief_update(agent_init: AgentInit):
     # observation = create_observation(agent_init.data)
     # Update the belief
     problem: AjanOOPOMDP = problems[pomdp_id]
+
+    # Copy state from environment to agent belief
+    next_agent_state = problem.env.state.object_states[agent_init.state_id]
+
     update_belief(agents[pomdp_id], last_action[pomdp_id], observation, planners[pomdp_id],
-                  obj_id=ord(agent_init.state_name[0].lower()), state_id=agent_init.state_id)
+                  obj_id=ord(agent_init.state_name[0].lower()),
+                  state_id=agent_init.state_id, next_agent_state=next_agent_state)
     # update_belief(agents[pomdp_id],last_action[pomdp_id], observation, planners[pomdp_id],
     #               obj_id=ord(agent_init.state_name[0]), state_id=agent_init.state_id)
     g.remove((None, None, None))

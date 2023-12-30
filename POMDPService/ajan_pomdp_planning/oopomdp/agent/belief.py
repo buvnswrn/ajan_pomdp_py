@@ -15,7 +15,7 @@ class AJANOOBelief(pomdp_py.OOBelief):
         return AjanOOState(pomdp_py.OOBelief.random(self, **kwargs).object_states)
 
 
-def initialize_belief(p_id: int, belief_dict: dict, representation):
+def initialize_belief(p_id: int, agent_id: int, belief_dict: dict, representation):
     if representation == "histogram":
         oo_hists = {}
         for objcls in belief_dict[p_id].keys():
@@ -27,6 +27,4 @@ def initialize_belief(p_id: int, belief_dict: dict, representation):
                 belief_dict[p_id][objcls][state] /= total_prob
             hist_belief = pomdp_py.Histogram(belief_dict[p_id][objcls])
             oo_hists[ord(objcls[0].lower())] = hist_belief
-        return AJANOOBelief(p_id, oo_hists)
-
-
+        return AJANOOBelief(agent_id, oo_hists)
