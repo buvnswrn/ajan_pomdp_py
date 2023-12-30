@@ -11,7 +11,12 @@ from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import _rdf, _2
 
 
 def parse_pandas(graph: Graph, o):
-    # TODO:Have to remove the Point names or include them in creation of pandas graph entry
+    """
+    Converts the graph to pandas dataframe
+    :param graph:
+    :param o:
+    :return:
+    """
     temp_graph = Graph()
 
     points = sorted(set([o for _, _, o in graph.triples((o, RDF.value, None))]))

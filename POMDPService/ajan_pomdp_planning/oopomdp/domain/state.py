@@ -12,7 +12,7 @@ if gettrace is None:
     print('No sys.gettrace')
 elif gettrace():
     print('Hmm, Big Debugger is watching me')
-    debug = True
+    debug = False
 
 
 class AjanAgentState(pomdp_py.ObjectState):
@@ -20,7 +20,7 @@ class AjanAgentState(pomdp_py.ObjectState):
         self.graph = Graph()
         self.state_subject = createIRI(_State, agent_id)
         self.graph.add((self.state_subject, RDF.type, _State))
-        self.graph.add((self.state_subject, _Type, Literal("Agent")))
+        self.graph.add((self.state_subject, _Type, Literal("agent")))
         self.graph.add((self.state_subject, _Id, Literal(agent_id)))
         self.graph.add((self.state_subject, _Name, Literal(name)))
         if type(attributes) == str:
@@ -62,7 +62,7 @@ class AjanEnvObjectState(pomdp_py.ObjectState):
         self.graph = Graph()
         self.state_subject = createIRI(_State, obj_id)
         self.graph.add((self.state_subject, RDF.type, _State))
-        self.graph.add((self.state_subject, _Type, Literal("Env")))
+        self.graph.add((self.state_subject, _Type, Literal("env")))
         self.graph.add((self.state_subject, _Id, Literal(obj_id)))
         self.graph.add((self.state_subject, _Name, Literal(objclass)))
         if type(attributes) == str:

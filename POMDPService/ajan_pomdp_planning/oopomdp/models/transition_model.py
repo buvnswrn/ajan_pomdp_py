@@ -45,24 +45,6 @@ class AjanTransitionModel(pomdp_py.TransitionModel):
         result_state = convert_to_state(argmax_graph)
         return result_state
 
-    # region Helper Functions
-
-    def remove_oo_state_from_graph(self, state):
-        for key, value in state.object_states.items():
-            remove_state_from_graph(self.graph, value, _CurrentState)
-
-    def add_oo_state_to_graph(self, state, namespace):
-        # Add Current State value and it's graph
-        states = list()
-        for key, value in state.object_states.items():
-            state_subject = createIRI(_State, value.attributes['id'])
-            states.append(state_subject)
-            self.graph += value.graph
-        Seq(self.graph, namespace, states)
-
-    # endregion
-
-
 class AjanOOTransitionModel(pomdp_py.OOTransitionModel):
     def __init__(self, ids, graph_datas, attributes, probability_queries, sample_queries, argmax_queries):
         transition_models = {ids[i]: AjanTransitionModel(graph_datas[i],

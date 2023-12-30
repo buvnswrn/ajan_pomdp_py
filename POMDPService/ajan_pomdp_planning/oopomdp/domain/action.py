@@ -12,7 +12,7 @@ if gettrace is None:
     print('No sys.gettrace')
 elif gettrace():
     print('Hmm, Big Debugger is watching me')
-    debug = True
+    debug = False
 
 
 class AjanAction(pomdp_py.Action):

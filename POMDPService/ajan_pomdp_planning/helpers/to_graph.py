@@ -1,3 +1,4 @@
+import sys
 from sys import gettrace
 
 from rdflib import RDF, Graph, BNode, Literal
@@ -10,6 +11,13 @@ from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIR
     _CurrentState, _NextState, pomdp_ns, _Attributes, _CurrentObservation, _Observation, _To_Print, _Type, _Id, _Name, \
     _PlannedAction, pomdp_ns1
 
+gettrace = getattr(sys, 'gettrace', None)
+debug = False
+if gettrace is None:
+    print('No sys.gettrace')
+elif gettrace():
+    print('Hmm, Big Debugger is watching me')
+    debug = False
 
 def get_state_query(state):
     # query = """PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
@@ -114,11 +122,14 @@ def check_state(model_id, state):
 
 
 def remove_state_from_graph(graph, state, namespace):
-    graph.remove((namespace, RDF.value, createIRI(_State, state.attributes['id'])))
+    graph.remove((namespace, RDF.value, state.state_subject))
     graph -= state.graph
     # add the type to the attributes node so that we can query it
     if type(state) != AjanOOState:
         graph.remove((state.attributes_node, RDF.type, namespace))
+    else:
+        for key, value in state.object_states.items():
+            graph.remove((value.attributes_node, RDF.type, namespace))
     return graph
 
 
@@ -230,7 +241,7 @@ def get_attributes_from_graph(graph, attributes_node):
         return None
     state_attributes = dict()
     for s, p, o in graph.triples((attributes_node, None, None)):
-        if gettrace():
+        if debug:
             print(s, p, o)
         key = p.split("/_")[-1]
         value = get_data_from_graph(o, graph)
