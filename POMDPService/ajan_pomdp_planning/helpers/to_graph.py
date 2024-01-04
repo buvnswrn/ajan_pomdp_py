@@ -1,15 +1,14 @@
 import sys
-from sys import gettrace
 
 from rdflib import RDF, Graph, BNode, Literal
 
-from POMDPService.ajan_pomdp_planning.helpers.converters import get_data_from_graph, get_value_to_graph_literal
 import POMDPService.ajan_pomdp_planning.oopomdp.domain.action as _action_helper
 import POMDPService.ajan_pomdp_planning.oopomdp.domain.observation as _observation_helper
+from POMDPService.ajan_pomdp_planning.helpers.converters import get_data_from_graph, get_value_to_graph_literal
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState, AjanEnvObjectState, AjanAgentState
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _State, _CurrentAction, _Action, \
-    _CurrentState, _NextState, pomdp_ns, _Attributes, _CurrentObservation, _Observation, _To_Print, _Type, _Id, _Name, \
-    _PlannedAction, pomdp_ns1
+    _CurrentState, _NextState, pomdp_ns, _Attributes, _CurrentObservation, _Observation, _To_Print, _PlannedAction, \
+    pomdp_ns1
 
 gettrace = getattr(sys, 'gettrace', None)
 debug = False
