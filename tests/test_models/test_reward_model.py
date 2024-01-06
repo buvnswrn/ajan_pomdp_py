@@ -237,6 +237,10 @@ class TestRewardModel(unittest.TestCase):
         self.reward_model = AjanRewardModel("", {"drone_id": 101, "person_id": 102}, self.probability_query, self.sample_query, self.argmax_query)
         self.assertNotEqual(self.reward_model, None, "Should not be None")
 
+    def test_init1(self):
+        self.reward_model = AjanRewardModel("", {"drone_id": 100, "big": 1000, "person_id": None}, self.probability_query, self.sample_query, self.argmax_query)
+        self.assertNotEqual(self.reward_model, None, "Should not be None")
+
     def test_probability_perceive(self):
         self.test_init()
         next_state = AjanAgentState("Drone", 101, {"pose": (10, 10), "gesture_found": True})
@@ -339,7 +343,7 @@ class TestRewardModel(unittest.TestCase):
         probability = self.reward_model.probability(1000, oo_state, action, oo_next_state)
 
         self.assertEqual(probability, 0.0, "Probability mismatch in move action")
-    
+
     def test_sample_perceive(self):
         self.test_init()
         next_state = AjanAgentState("Drone", 101, {"pose": (10, 10), "gesture_found": True})
@@ -354,19 +358,51 @@ class TestRewardModel(unittest.TestCase):
 
         self.assertEqual(sample, 1000, "sample mismatch in perceive action")
 
+    def test_sample_perceive_1(self):
+        self.test_init1()
+        current_env_state = AjanEnvObjectState("Person", 112, {"pose": None, "gesture": None})
+        next_env_state = AjanEnvObjectState("Person", 112, {"pose": None, "gesture": "right"})
+
+        current_agent_state = AjanAgentState("Drone", 100, {"pose": (0, 0), "gesture_found": False})
+        next_agent_state = AjanAgentState("Drone", 100, {"pose": (0, 0), "gesture_found": True})
+
+        current_state = AjanOOState({80: current_env_state, 68: current_agent_state})
+
+        next_state = AjanOOState({80: next_env_state, 68: next_agent_state})
+
+        action = AjanAction("perceive")
+
+        sample = self.reward_model.sample(current_state, action, next_state)
+
+        self.assertEqual(sample, 1000, "sample mismatch in perceive action")
+
+    def test_sample_perceive_2(self):
+        self.test_init1()
+        current_env_state = AjanEnvObjectState("Person", 112, {"pose": None, "gesture": None})
+        next_env_state = AjanEnvObjectState("Person", 112, {"pose": None, "gesture": None})
+        current_agent_state = AjanAgentState("Drone", 100, {"pose": (0, 0), "gesture_found": False})
+        next_agent_state = AjanAgentState("Drone", 100, {"pose": (0, 0), "gesture_found": False})
+        action = AjanAction("move", {"motion": "right"})
+        current_state = AjanOOState({112: current_env_state, 100: current_agent_state})
+        next_state = AjanOOState({112: next_env_state, 100: next_agent_state})
+        sample = self.reward_model.sample(current_state, action, next_state)
+        self.assertEqual(sample, 0, "sample mismatch in perceive action")
+
+
     def test_sample_perceive_no_change(self):
         self.test_init()
-        next_state = AjanAgentState("Drone", 101, {"pose": (10, 10), "gesture_found": False})
-        state = AjanAgentState("Drone", 101, {"pose": (10, 10), "gesture_found": False})
-        person_state = AjanEnvObjectState("Person", 102, {"pose": (10, 10), "gesture": None})
+        state = AjanAgentState("Drone", 101, {"pose": (0, 0), "gesture_found": False})
+        next_state = AjanAgentState("Drone", 101, {"pose": (0, 0), "gesture_found": True})
+        person_state = AjanEnvObjectState("Person", 112, {"pose": None, "gesture": None})
+        next_person_state = AjanEnvObjectState("Person", 112, {"pose": None, "gesture": "right"})
         action = AjanAction("perceive")
 
         oo_state = AjanOOState({"Drone": state, "Person": person_state})
-        oo_next_state = AjanOOState({"Drone": next_state, "Person": person_state})
+        oo_next_state = AjanOOState({"Drone": next_state, "Person": next_person_state})
 
         sample = self.reward_model.sample(oo_state, action, oo_next_state)
 
-        self.assertEqual(sample, 0, "sample mismatch in perceive action")
+        self.assertEqual(sample, 1000, "sample mismatch in perceive action")
 
     def test_sample_move(self):
         self.test_init()

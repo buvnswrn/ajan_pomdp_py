@@ -1,5 +1,3 @@
-import rdflib
-from rdflib import Graph
 import unittest
 
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.action import AjanAction
@@ -74,6 +72,61 @@ class TestTransitionModel(unittest.TestCase):
         BIND(IF(?action=pomdp-ns1:Action_perceive, 
                 IF(RAND()>0.5,"true"^^xsd:boolean,"false"^^xsd:boolean), 
             ?gesture) as ?gestureValue) .
+        ?s ?p ?o  .
+    }
+    """
+    sample_query_person = """
+    PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
+    PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
+    PREFIX pomdp-data-ns:<http://www.dfki.de/pomdp-ns/POMDP/data/>
+    PREFIX rdfs:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+    CONSTRUCT {
+        pomdp-ns:State rdfs:value ?state .
+        ?state rdfs:type pomdp-ns:State .
+        ?state pomdp-ns:id ?stateId .
+        ?state pomdp-ns:name ?stateName .
+        ?state pomdp-ns:type ?stateType .
+        ?state pomdp-ns:attributes ?attributes .
+        ?attributes pomdp-ns1:_id ?stateId .
+
+        ?attributes pomdp-ns1:_gesture ?gestureValue .
+
+        ?attributes pomdp-ns1:_pose ?pose .
+        ?pose rdfs:type ?poseType .
+        ?pose rdfs:x ?xValue .
+        ?pose rdfs:y ?yValue .
+
+    }
+    WHERE{
+        pomdp-ns:current_state rdfs:value ?state .
+        ?state pomdp-ns:name ?stateName .
+        ?state pomdp-ns:type ?stateType .
+
+        pomdp-ns:current_action rdfs:value ?action .
+        ?state pomdp-ns:id ?stateId .
+        ?state pomdp-ns:attributes ?attributesNode .
+        ?attributesNode pomdp-ns1:_pose ?poseNode .
+        ?attributesNode pomdp-ns1:_gesture ?gesture .
+
+        OPTIONAL{    
+            ?poseNode rdfs:x ?xPose .
+            ?poseNode rdfs:y ?yPose .
+            BIND(pomdp-data-ns:2dVector as ?poseType) .
+            ?action pomdp-ns:attributes ?actionAttributes .
+            ?actionAttributes pomdp-ns1:_motion ?motionType .
+        }
+
+        BIND(BNODE() as ?attributes) .
+        BIND(IF(?action=pomdp-ns1:Action_perceive, rdfs:nil, BNODE()) as ?pose) .
+        BIND(BNODE() as ?poseValue) .
+
+        BIND(IF(?action=pomdp-ns1:Action_perceive, 
+                IF(RAND()>0.5,
+                    IF(RAND()>0.5, "left",rdfs:nil)
+                    ,"right"), 
+                ?gesture) as ?gestureValue) .
         ?s ?p ?o  .
     }
     """
@@ -191,7 +244,7 @@ class TestTransitionModel(unittest.TestCase):
     def test_get_probability_diff_state(self):
         self.test_init()
         next_state = AjanAgentState("Drone", 102)
-        state = AjanAgentState("Drone", 101)
+        state = AjanAgentState("Drone", 102)
         action = AjanAction("perceive")
 
         probability = self.transition_model.probability(next_state, state, action)
@@ -210,7 +263,6 @@ class TestTransitionModel(unittest.TestCase):
 
         self.assertEqual(probability, 0.999999999, "Probability mismatch")
 
-
     def test_sample(self):
         self.test_init()
         state = AjanAgentState("Drone", 101, {'gesture_found': False, 'id': 101, 'pose': (10, 10)})
@@ -220,6 +272,16 @@ class TestTransitionModel(unittest.TestCase):
         result_state = self.transition_model.sample(state, action)
 
         self.assertNotEqual(result_state, state, "States Should be equal")
+
+    def test_sample_person_move(self):
+        self.test_init()
+        self.transition_model.sample_query = self.sample_query_person
+        state = AjanEnvObjectState("Person", 112, {'gesture': "left", 'id': 112, 'pose': None})
+        move_action = AjanAction("move", {"motion": "left"})
+        result_state = self.transition_model.sample(state, move_action)
+        self.assertEqual(result_state, state, "States Should be equal")
+
+
 
     def test_sample_perceive(self):
         self.test_init()
