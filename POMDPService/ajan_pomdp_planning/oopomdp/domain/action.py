@@ -38,7 +38,7 @@ class AjanAction(pomdp_py.Action):
         if for_hash is not None:
             self.for_hash = frozenset(for_hash)
             self.for_hash_node = graph_helper.add_to_list_values_to_graph(self.graph, for_hash,
-                                                                       self.action_subject, _For_Hash)
+                                                                          self.action_subject, _For_Hash)
         else:
             self.for_hash = None
         if debug:

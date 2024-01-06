@@ -282,7 +282,7 @@ def convert_to_observation(graph: Graph):
     return get_observation_from_graph(graph, _Observation)
 
 
-def convert_to_planned_action_data(graph: Graph, pomdp_id, action: _action_helper.AjanAction):
+def convert_to_planned_action_data(graph: Graph, pomdp_id, action):
     pomdp_id_node = pomdp_ns1[str(pomdp_id)]
     action_node = createIRI(_Action, str(action))
     temp_graph = Graph()
