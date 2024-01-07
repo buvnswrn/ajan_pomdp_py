@@ -1,3 +1,6 @@
+# Run this model in debug mode with breakpoint in out.query of to_graph (line 156) since SELECT query is used.
+# Else it will fail due to some sync issues which is automatically corrected internally in pomdp_py.
+
 import unittest
 
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.action import AjanAction
