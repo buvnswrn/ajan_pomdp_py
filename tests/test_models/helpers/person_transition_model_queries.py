@@ -136,8 +136,8 @@ PROBABILITY_QUERY = """
         ?next_state_attributes pomdp-ns1:_pose ?next_pose .
         
         OPTIONAL {
-            ?next_pose rdfs:x ?next_x .
-            ?next_pose rdfs:y ?next_y .
+            ?next_pose rdf:x ?next_x .
+            ?next_pose rdf:y ?next_y .
         }
         
         
@@ -147,8 +147,8 @@ PROBABILITY_QUERY = """
         ?current_state_attributes pomdp-ns1:_pose ?current_pose .
         
         OPTIONAL {
-            ?current_pose rdfs:x ?current_x .
-            ?current_pose rdfs:y ?current_y .
+            ?current_pose rdf:x ?current_x .
+            ?current_pose rdf:y ?current_y .
         }
         
         BIND(IF(?next_gesture=?current_gesture, true, false) as ?gesture_equal) .
