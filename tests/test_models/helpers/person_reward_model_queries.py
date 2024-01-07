@@ -156,6 +156,7 @@ PROBABILITY_QUERY = """
     WHERE {
         pomdp-ns:current_action rdfs:value ?action .
         pomdp-ns:RewardModel pomdp-ns:attributes ?modelAttributesNode .
+        pomdp-ns:current_reward rdfs:value ?current_reward .
         
         OPTIONAL {
         ?action pomdp-ns:attributes ?actionAttributeNode .
@@ -216,7 +217,7 @@ PROBABILITY_QUERY = """
         IF(?person_current_gesture = ?motionType,?perceiveReward+?bigReward,?perceiveReward-?bigReward), ?perceiveReward)
         as ?perceiveReward) .
         
-        BIND(?perceiveReward as ?probability) .
+        BIND(IF(?perceiveReward=?current_reward, 1.0, 0.0) as ?probability) .
         
     }
 """
