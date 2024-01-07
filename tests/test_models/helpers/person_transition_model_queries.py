@@ -126,7 +126,7 @@ PROBABILITY_QUERY = """
         pomdp-ns:next_state rdf:value ?next_state .
         pomdp-ns:current_state rdf:value ?current_state .
         pomdp-ns:TransitionModel pomdp-ns:attributes ?attributesNode .
-        ?attributesNode pomdp-ns1:_epsilon_id ?epsilon .
+        ?attributesNode pomdp-ns1:_epsilon ?epsilon .
         BIND(IF(?next_state=?current_state, 1-?epsilon, ?epsilon) as ?probability) .
     }
 """

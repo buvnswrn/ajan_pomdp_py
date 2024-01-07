@@ -33,9 +33,12 @@ SAMPLE_QUERY = """
         ?state pomdp-ns:attributes ?attributesNode .
         ?attributesNode pomdp-ns1:_pose ?poseNode .
         ?attributesNode pomdp-ns1:_gesture_found ?gesture .
-        ?poseNode rdfs:x ?xPose .
-        ?poseNode rdfs:y ?yPose .
-
+        
+        OPTIONAL {
+            ?poseNode rdfs:x ?xPose .
+            ?poseNode rdfs:y ?yPose .
+        }
+        
         OPTIONAL{    
             ?action pomdp-ns:attributes ?actionAttributes .
             ?actionAttributes pomdp-ns1:_motion ?motionType .
@@ -47,13 +50,13 @@ SAMPLE_QUERY = """
         BIND(BNODE() as ?poseValue) .
 
         BIND(IF (?action=pomdp-ns1:Action_move && ?motionType ="right",
-                ?xPose-1,?xPose) as ?xValue) .
+                ?xPose+1,?xPose) as ?xValue) .
         BIND(IF (?action=pomdp-ns1:Action_move && ?motionType ="left",
-                ?yPose+1,?yPose) as ?yValue) .
-
+                ?xPose-1,?xValue) as ?xValue) .
+        BIND(IF(?action=pomdp-ns1:Action_move,?yPose+1,?yPose) as ?yValue) .
         BIND(IF(?action=pomdp-ns1:Action_perceive, 
                 IF(RAND()>0.5,"true"^^xsd:boolean,"false"^^xsd:boolean), 
-            ?gesture) as ?gestureValue) .
+            "false"^^xsd:boolean) as ?gestureValue) .
         ?s ?p ?o  .
     }
 """
@@ -91,9 +94,12 @@ ARGMAX_QUERY = """
         ?state pomdp-ns:attributes ?attributesNode .
         ?attributesNode pomdp-ns1:_pose ?poseNode .
         ?attributesNode pomdp-ns1:_gesture_found ?gesture .
-        ?poseNode rdfs:x ?xPose .
-        ?poseNode rdfs:y ?yPose .
-
+        
+        OPTIONAL {
+            ?poseNode rdfs:x ?xPose .
+            ?poseNode rdfs:y ?yPose .
+        }
+        
         OPTIONAL{    
             ?action pomdp-ns:attributes ?actionAttributes .
             ?actionAttributes pomdp-ns1:_motion ?motionType .
@@ -105,13 +111,13 @@ ARGMAX_QUERY = """
         BIND(BNODE() as ?poseValue) .
 
         BIND(IF (?action=pomdp-ns1:Action_move && ?motionType ="right",
-                ?xPose-1,?xPose) as ?xValue) .
+                ?xPose+1,?xPose) as ?xValue) .
         BIND(IF (?action=pomdp-ns1:Action_move && ?motionType ="left",
-                ?yPose+1,?yPose) as ?yValue) .
-
+                ?xPose-1,?xValue) as ?xValue) .
+        BIND(IF(?action=pomdp-ns1:Action_move,?yPose+1,?yPose) as ?yValue) .
         BIND(IF(?action=pomdp-ns1:Action_perceive, 
                 IF(RAND()>0.5,"true"^^xsd:boolean,"false"^^xsd:boolean), 
-            ?gesture) as ?gestureValue) .
+            "false"^^xsd:boolean) as ?gestureValue) .
         ?s ?p ?o  .
     }
 """
