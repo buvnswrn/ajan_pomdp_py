@@ -20,10 +20,10 @@ SAMPLE_QUERY = """
 
         ?attributes pomdp-ns1:_gesture_found ?gestureValue .
 
-        ?attributes pomdp-ns1:_pose ?pose .
-        ?pose rdfs:type pomdp-data-ns:2dVector .
-        ?pose rdfs:x ?xValue .
-        ?pose rdfs:y ?yValue .
+        ?attributes pomdp-ns1:_pose ?poseNew .
+        ?poseNew rdfs:type pomdp-data-ns:2dVector .
+        ?poseNew rdfs:x ?xValue .
+        ?poseNew rdfs:y ?yValue .
 
     }
     WHERE{
@@ -48,6 +48,8 @@ SAMPLE_QUERY = """
         BIND(BNODE() as ?to_print_node) .
         BIND(BNODE() as ?pose) .
         BIND(BNODE() as ?poseValue) .
+        
+        BIND(IF(?poseNode = rdfs:nil && ?action=pomdp-ns1:Action_perceive, rdfs:nil, ?pose) as ?poseNew) .
 
         BIND(IF (?action=pomdp-ns1:Action_move && ?motionType ="right",
                 ?xPose+1,?xPose) as ?xValue) .
@@ -81,10 +83,10 @@ ARGMAX_QUERY = """
 
         ?attributes pomdp-ns1:_gesture_found ?gestureValue .
 
-        ?attributes pomdp-ns1:_pose ?pose .
-        ?pose rdfs:type pomdp-data-ns:2dVector .
-        ?pose rdfs:x ?xValue .
-        ?pose rdfs:y ?yValue .
+        ?attributes pomdp-ns1:_pose ?poseNew .
+        ?poseNew rdfs:type pomdp-data-ns:2dVector .
+        ?poseNew rdfs:x ?xValue .
+        ?poseNew rdfs:y ?yValue .
 
     }
     WHERE{
@@ -109,6 +111,8 @@ ARGMAX_QUERY = """
         BIND(BNODE() as ?to_print_node) .
         BIND(BNODE() as ?pose) .
         BIND(BNODE() as ?poseValue) .
+        
+        BIND(IF(?poseNode = rdfs:nil && ?action=pomdp-ns1:Action_perceive, rdfs:nil, ?pose) as ?poseNew) .
 
         BIND(IF (?action=pomdp-ns1:Action_move && ?motionType ="right",
                 ?xPose+1,?xPose) as ?xValue) .
