@@ -124,13 +124,13 @@ class TestPersonTransitionModelProbability(unittest.TestCase):
         next_state = AjanAgentState("Person", 112, {"id": 112, "pose": None, "gesture": "right"}, ["pose", "gesture"])
         current_state = AjanAgentState("Person", 112, {"id": 112, "pose": (0, 0), "gesture": "right"}, ["pose", "gesture"])
         action = AjanAction("move", {"motion": "left"})
-        self.assertEqual(self.person_transition_model.probability(next_state, current_state, action), 1e-9)
+        self.assertEqual(self.person_transition_model.probability(next_state, current_state, action), 0.999999999)
 
     def test_probability_right_left_move_left(self):
         next_state = AjanAgentState("Person", 112, {"id": 112, "pose": None, "gesture": "left"}, ["pose", "gesture"])
         current_state = AjanAgentState("Person", 112, {"id": 112, "pose": (0, 0), "gesture": "right"}, ["pose", "gesture"])
         action = AjanAction("move", {"motion": "left"})
-        self.assertEqual(self.person_transition_model.probability(next_state, current_state, action), 0.999999999)
+        self.assertEqual(self.person_transition_model.probability(next_state, current_state, action), 1e-9)
 
     def test_probability_right_none_move_left(self):
         next_state = AjanAgentState("Person", 112, {"id": 112, "pose": None, "gesture": None}, ["pose", "gesture"])

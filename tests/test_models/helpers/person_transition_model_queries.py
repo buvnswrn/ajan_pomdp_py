@@ -123,11 +123,38 @@ PROBABILITY_QUERY = """
 
     SELECT ?probability
     WHERE{
-        pomdp-ns:next_state rdf:value ?next_state .
-        pomdp-ns:current_state rdf:value ?current_state .
         pomdp-ns:TransitionModel pomdp-ns:attributes ?attributesNode .
         ?attributesNode pomdp-ns1:_epsilon ?epsilon .
-        BIND(IF(?next_state=?current_state, 1-?epsilon, ?epsilon) as ?probability) .
+        BIND(?epsilon as ?probability) .
+        
+        pomdp-ns:next_state rdf:value ?next_state .
+        pomdp-ns:current_state rdf:value ?current_state .
+        
+        ?next_state pomdp-ns:attributes ?next_state_attributes .
+        ?next_state_attributes rdf:type pomdp-ns:next_state .
+        ?next_state_attributes pomdp-ns1:_gesture ?next_gesture .
+        ?next_state_attributes pomdp-ns1:_pose ?next_pose .
+        
+        OPTIONAL {
+            ?next_pose rdfs:x ?next_x .
+            ?next_pose rdfs:y ?next_y .
+        }
+        
+        
+        ?current_state pomdp-ns:attributes ?current_state_attributes .
+        ?current_state_attributes rdf:type pomdp-ns:current_state .
+        ?current_state_attributes pomdp-ns1:_gesture ?current_gesture .
+        ?current_state_attributes pomdp-ns1:_pose ?current_pose .
+        
+        OPTIONAL {
+            ?current_pose rdfs:x ?current_x .
+            ?current_pose rdfs:y ?current_y .
+        }
+        
+        BIND(IF(?next_gesture=?current_gesture, true, false) as ?gesture_equal) .
+        
+        BIND(IF(?next_state=?current_state && ?gesture_equal, 1-?epsilon, ?epsilon) as ?probability) .
+        
     }
 """
 
