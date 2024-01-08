@@ -6,8 +6,14 @@ from POMDPService.ajan_pomdp_planning.oopomdp.models.policy_model import AjanPol
 from tests.test_models.helpers.policy_model_queries import SAMPLE_QUERY, ROLLOUT_QUERY, GET_ALL_ACTIONS_QUERY, DATA
 
 
-class TestPolicyModelRollout(unittest.TestCase):
+def print_Action(action):
+    if action.attributes is not None:
+        print(str(action) + " " + action.attributes["motion"])
+    else:
+        print(action)
 
+
+class TestPolicyModelRollout(unittest.TestCase):
     policy_model = AjanPolicyModel(DATA, None, SAMPLE_QUERY, ROLLOUT_QUERY, GET_ALL_ACTIONS_QUERY)
 
     def test_rollout_false_right(self):
@@ -18,7 +24,7 @@ class TestPolicyModelRollout(unittest.TestCase):
                                                  {"pose": (0, 0), "gesture_found": False},
                                                  ["gesture_found", "pose"])})
         action = self.policy_model.rollout(state)
-        print(action)
+        print_Action(action)
         self.assertIn(action, [AjanAction("move", {"motion": "right"}),
                                AjanAction("move", {"motion": "left"}),
                                AjanAction("perceive")])  # should only be perceive
@@ -31,7 +37,7 @@ class TestPolicyModelRollout(unittest.TestCase):
                                                  {"pose": (0, 0), "gesture_found": False},
                                                  ["gesture_found", "pose"])})
         action = self.policy_model.rollout(state)
-        print(action)
+        print_Action(action)
         self.assertIn(action, [AjanAction("move", {"motion": "right"}),
                                AjanAction("move", {"motion": "left"}),
                                AjanAction("perceive")])  # should only be perceive
@@ -44,7 +50,7 @@ class TestPolicyModelRollout(unittest.TestCase):
                                                  {"pose": (0, 0), "gesture_found": False},
                                                  ["gesture_found", "pose"])})
         action = self.policy_model.rollout(state)
-        print(action)
+        print_Action(action)
         self.assertIn(action, [AjanAction("move", {"motion": "right"}),
                                AjanAction("move", {"motion": "left"}),
                                AjanAction("perceive")])  # should only be perceive
@@ -57,7 +63,7 @@ class TestPolicyModelRollout(unittest.TestCase):
                                                  {"pose": (0, 0), "gesture_found": True},
                                                  ["gesture_found", "pose"])})
         action = self.policy_model.rollout(state)
-        print(action)
+        print_Action(action)
         self.assertIn(action, [AjanAction("move", {"motion": "right"}),
                                AjanAction("move", {"motion": "left"}),
                                AjanAction("perceive")])  # should only be move right
@@ -70,7 +76,7 @@ class TestPolicyModelRollout(unittest.TestCase):
                                                  {"pose": (0, 0), "gesture_found": True},
                                                  ["gesture_found", "pose"])})
         action = self.policy_model.rollout(state)
-        print(action)
+        print_Action(action)
         self.assertIn(action, [AjanAction("move", {"motion": "right"}),
                                AjanAction("move", {"motion": "left"}),
                                AjanAction("perceive")])  # should only be move left
@@ -83,7 +89,7 @@ class TestPolicyModelRollout(unittest.TestCase):
                                                  {"pose": (0, 0), "gesture_found": True},
                                                  ["gesture_found", "pose"])})
         action = self.policy_model.rollout(state)
-        print(action)
+        print_Action(action)
         self.assertIn(action, [AjanAction("move", {"motion": "right"}),
                                AjanAction("move", {"motion": "left"}),
                                AjanAction("perceive")])  # should only be perceive
