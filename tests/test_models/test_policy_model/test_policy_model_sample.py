@@ -3,11 +3,11 @@ import unittest
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.action import AjanAction
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanEnvObjectState, AjanAgentState, AjanOOState
 from POMDPService.ajan_pomdp_planning.oopomdp.models.policy_model import AjanPolicyModel
-from tests.test_models.helpers.policy_model_queries import ROLLOUT_QUERY, SAMPLE_QUERY, DATA, GET_ALL_ACTIONS_QUERY
+from tests.test_models.helpers.policy_model_queries import ROLLOUT_QUERY_POLICY, SAMPLE_QUERY_POLICY, DATA_POLICY, GET_ALL_ACTIONS_QUERY
 
 
 class TestPolicyModelSample(unittest.TestCase):
-    policy_model = AjanPolicyModel(DATA, None, SAMPLE_QUERY, ROLLOUT_QUERY, GET_ALL_ACTIONS_QUERY)
+    policy_model = AjanPolicyModel(DATA_POLICY, None, SAMPLE_QUERY_POLICY, ROLLOUT_QUERY_POLICY, GET_ALL_ACTIONS_QUERY)
 
     def test_sample_false_right(self):
         state = AjanOOState({112: AjanEnvObjectState("Person", 112,

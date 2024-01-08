@@ -1,4 +1,4 @@
-SAMPLE_QUERY = """
+SAMPLE_QUERY_POLICY = """
     PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
     PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     CONSTRUCT {pomdp-ns:Action rdf:value ?actionNode .
@@ -17,7 +17,7 @@ SAMPLE_QUERY = """
     }
 """
 
-ROLLOUT_QUERY = """
+ROLLOUT_QUERY_POLICY = """
     PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
     PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     CONSTRUCT {pomdp-ns:Action rdf:value ?actionNode .
@@ -55,7 +55,7 @@ GET_ALL_ACTIONS_QUERY = """
     }
 """
 
-DATA = """
+DATA_POLICY = """
 <http://www.dfki.de/pomdp-ns#Action> <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
     <http://www.dfki.de/pomdp-ns/Action_perceive>, <http://www.dfki.de/pomdp-ns/Action_move> .
 
