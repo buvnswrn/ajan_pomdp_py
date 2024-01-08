@@ -6,12 +6,12 @@ import unittest
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.action import AjanAction
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanAgentState, AjanOOState
 from POMDPService.ajan_pomdp_planning.oopomdp.models.transition_model import AjanTransitionModel
-from tests.test_models.helpers.drone_transition_model_queries import DATA, SAMPLE_QUERY, ARGMAX_QUERY, PROBABILITY_QUERY
+from tests.test_models.helpers.drone_transition_model_queries import DATA_D_T, SAMPLE_QUERY_D_T, ARGMAX_QUERY_D_T, PROBABILITY_QUERY_D_T
 
 
 class TestDroneTransitionModelProbability(unittest.TestCase):
 
-    drone_transition_model = AjanTransitionModel(100, DATA, None, PROBABILITY_QUERY, SAMPLE_QUERY, ARGMAX_QUERY)
+    drone_transition_model = AjanTransitionModel(100, DATA_D_T, None, PROBABILITY_QUERY_D_T, SAMPLE_QUERY_D_T, ARGMAX_QUERY_D_T)
 
 
     def test_probability_true_true_perceive(self):

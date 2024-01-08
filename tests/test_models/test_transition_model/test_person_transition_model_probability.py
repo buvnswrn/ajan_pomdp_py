@@ -6,13 +6,13 @@ import unittest
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.action import AjanAction
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanAgentState, AjanOOState
 from POMDPService.ajan_pomdp_planning.oopomdp.models.transition_model import AjanTransitionModel
-from tests.test_models.helpers.person_transition_model_queries import PROBABILITY_QUERY, DATA, ARGMAX_QUERY, \
-    SAMPLE_QUERY
+from tests.test_models.helpers.person_transition_model_queries import PROBABILITY_QUERY_P_T, DATA_P_T, ARGMAX_QUERY_P_T, \
+    SAMPLE_QUERY_P_T
 
 
 class TestPersonTransitionModelProbability(unittest.TestCase):
 
-    person_transition_model = AjanTransitionModel(112, DATA, None, PROBABILITY_QUERY, SAMPLE_QUERY, ARGMAX_QUERY)
+    person_transition_model = AjanTransitionModel(112, DATA_P_T, None, PROBABILITY_QUERY_P_T, SAMPLE_QUERY_P_T, ARGMAX_QUERY_P_T)
 
     def test_probability_right_right_perceive(self):
         next_state = AjanAgentState("Person", 112, {"id": 112, "pose": None, "gesture": "right"}, ["pose", "gesture"])

@@ -1,6 +1,6 @@
 
 
-SAMPLE_QUERY = """
+SAMPLE_QUERY_P_T = """
     PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
     PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
     PREFIX pomdp-data-ns:<http://www.dfki.de/pomdp-ns/POMDP/data/>
@@ -58,7 +58,7 @@ SAMPLE_QUERY = """
     }
 """
 
-ARGMAX_QUERY = """
+ARGMAX_QUERY_P_T = """
     PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
     PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
     PREFIX pomdp-data-ns:<http://www.dfki.de/pomdp-ns/POMDP/data/>
@@ -116,7 +116,7 @@ ARGMAX_QUERY = """
     }
 """
 
-PROBABILITY_QUERY = """
+PROBABILITY_QUERY_P_T = """
     PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
     PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
     PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -158,7 +158,7 @@ PROBABILITY_QUERY = """
     }
 """
 
-DATA = """
+DATA_P_T = """
 <http://www.dfki.de/pomdp-ns#TransitionModel> <http://www.dfki.de/pomdp-ns#attributes>
     _:node1hjfvnde8x20 .
 

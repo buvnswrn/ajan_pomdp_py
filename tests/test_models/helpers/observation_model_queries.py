@@ -1,4 +1,4 @@
-SAMPLE_QUERY = """
+SAMPLE_QUERY_OBS = """
 PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
 PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
 PREFIX pomdp-ns-data:<http://www.dfki.de/pomdp-ns/POMDP/data/>
@@ -58,7 +58,7 @@ WHERE{
 }
 """
 
-ARGMAX_QUERY = """
+ARGMAX_QUERY_OBS = """
     PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
     PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
     PREFIX pomdp-ns-data:<http://www.dfki.de/pomdp-ns/POMDP/data/>
@@ -118,7 +118,7 @@ ARGMAX_QUERY = """
     }
 """
 
-PROBABILITY_QUERY = """
+PROBABILITY_QUERY_OBS = """
     PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
     PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
     PREFIX pomdp-ns-data:<http://www.dfki.de/pomdp-ns/POMDP/data/>
@@ -156,7 +156,7 @@ PROBABILITY_QUERY = """
     }
 """
 
-DATA = """
+DATA_OBS = """
 <http://www.dfki.de/pomdp-ns#ObservationModel> <http://www.dfki.de/pomdp-ns#attributes>
     _:node1hjikqhb9x19 .
 

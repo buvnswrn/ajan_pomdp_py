@@ -6,12 +6,12 @@ import unittest
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.action import AjanAction
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState, AjanAgentState
 from POMDPService.ajan_pomdp_planning.oopomdp.models.reward_model import AjanRewardModel
-from tests.test_models.helpers.drone_reward_model_queries import ARGMAX_QUERY, SAMPLE_QUERY, PROBABILITY_QUERY, DATA
+from tests.test_models.helpers.drone_reward_model_queries import ARGMAX_QUERY_D_R, SAMPLE_QUERY_D_R, PROBABILITY_QUERY_D_R, DATA_D_R
 
 
 class TestDroneRewardModelSample(unittest.TestCase):
 
-    reward_model = AjanRewardModel(DATA, None, PROBABILITY_QUERY, SAMPLE_QUERY, ARGMAX_QUERY)
+    reward_model = AjanRewardModel(DATA_D_R, None, PROBABILITY_QUERY_D_R, SAMPLE_QUERY_D_R, ARGMAX_QUERY_D_R)
 
     def test_sample_true_true_perceive(self):
         next_state = AjanOOState({100: AjanAgentState("Drone", 100,

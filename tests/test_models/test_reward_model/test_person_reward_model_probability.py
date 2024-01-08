@@ -3,11 +3,11 @@ import unittest
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.action import AjanAction
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanAgentState, AjanEnvObjectState, AjanOOState
 from POMDPService.ajan_pomdp_planning.oopomdp.models.reward_model import AjanRewardModel
-from tests.test_models.helpers.person_reward_model_queries import ARGMAX_QUERY, SAMPLE_QUERY, PROBABILITY_QUERY, DATA
+from tests.test_models.helpers.person_reward_model_queries import ARGMAX_QUERY_P_R, SAMPLE_QUERY_P_R, PROBABILITY_QUERY_P_R, DATA_P_R
 
 
 class TestPersonRewardModelProbability(unittest.TestCase):
-    reward_model = AjanRewardModel(DATA, None, PROBABILITY_QUERY, SAMPLE_QUERY, ARGMAX_QUERY)
+    reward_model = AjanRewardModel(DATA_P_R, None, PROBABILITY_QUERY_P_R, SAMPLE_QUERY_P_R, ARGMAX_QUERY_P_R)
 
     def test_probability_right_right_perceive(self):
         next_state = AjanOOState({112: AjanEnvObjectState("Person", 112,

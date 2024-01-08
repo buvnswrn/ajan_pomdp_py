@@ -1,5 +1,5 @@
 
-SAMPLE_QUERY = """
+SAMPLE_QUERY_D_R = """
     PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
     PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
     PREFIX rdfs:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -73,7 +73,7 @@ SAMPLE_QUERY = """
     }
 """
 
-ARGMAX_QUERY = """
+ARGMAX_QUERY_D_R = """
     PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
     PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
     PREFIX rdfs:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -147,7 +147,7 @@ ARGMAX_QUERY = """
     }
 """
 
-PROBABILITY_QUERY = """
+PROBABILITY_QUERY_D_R = """
     PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
     PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
     PREFIX rdfs:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -222,7 +222,7 @@ PROBABILITY_QUERY = """
     }
 """
 
-DATA = """
+DATA_D_R = """
 <http://www.dfki.de/pomdp-ns#RewardModel> <http://www.dfki.de/pomdp-ns#attributes>
     _:node1hjhkjqjrx22 .
 

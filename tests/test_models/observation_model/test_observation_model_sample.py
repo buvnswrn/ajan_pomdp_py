@@ -7,11 +7,11 @@ import CustomSPARQLFunctions.semantic_fields as semantic_fields
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.action import AjanAction
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanEnvObjectState
 from POMDPService.ajan_pomdp_planning.oopomdp.models.observation_model import AjanObservationModel
-from tests.test_models.helpers.observation_model_queries import DATA, PROBABILITY_QUERY, SAMPLE_QUERY, ARGMAX_QUERY
+from tests.test_models.helpers.observation_model_queries import DATA_OBS, PROBABILITY_QUERY_OBS, SAMPLE_QUERY_OBS, ARGMAX_QUERY_OBS
 
 
 class TestObservationModelSample(unittest.TestCase):
-    observation_model = AjanObservationModel(DATA, None, PROBABILITY_QUERY, SAMPLE_QUERY, ARGMAX_QUERY)
+    observation_model = AjanObservationModel(DATA_OBS, None, PROBABILITY_QUERY_OBS, SAMPLE_QUERY_OBS, ARGMAX_QUERY_OBS)
     rdflib.plugins.sparql.CUSTOM_EVALS["sample_values"] = custom_functions.sample_values
     rdflib.plugins.sparql.CUSTOM_EVALS["math_dist"] = custom_functions.distance
     rdflib.plugins.sparql.CUSTOM_EVALS["semantic_field_near"] = semantic_fields.near
