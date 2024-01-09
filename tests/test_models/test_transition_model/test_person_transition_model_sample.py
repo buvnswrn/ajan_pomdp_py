@@ -3,12 +3,14 @@ import unittest
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.action import AjanAction
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState, AjanEnvObjectState
 from POMDPService.ajan_pomdp_planning.oopomdp.models.transition_model import AjanTransitionModel
+from tests.test_models.alternate_models.python_transition_model import TransitionModel
 from tests.test_models.helpers.person_transition_model_queries import DATA_P_T, SAMPLE_QUERY_P_T, PROBABILITY_QUERY_P_T, \
     ARGMAX_QUERY_P_T
 
 
 class TestPersonTransitionModelSample(unittest.TestCase):
     person_transition_model = AjanTransitionModel(112, DATA_P_T, None, PROBABILITY_QUERY_P_T, SAMPLE_QUERY_P_T, ARGMAX_QUERY_P_T)
+    # person_transition_model = TransitionModel("person", 112)
 
     def test_sample_right_perceive(self):
         current_state = AjanOOState({112: AjanEnvObjectState("Person", 112,

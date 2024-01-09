@@ -6,6 +6,7 @@ import unittest
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.action import AjanAction
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanAgentState, AjanOOState
 from POMDPService.ajan_pomdp_planning.oopomdp.models.transition_model import AjanTransitionModel
+from tests.test_models.alternate_models.python_transition_model import TransitionModel
 from tests.test_models.helpers.person_transition_model_queries import PROBABILITY_QUERY_P_T, DATA_P_T, ARGMAX_QUERY_P_T, \
     SAMPLE_QUERY_P_T
 
@@ -13,6 +14,7 @@ from tests.test_models.helpers.person_transition_model_queries import PROBABILIT
 class TestPersonTransitionModelProbability(unittest.TestCase):
 
     person_transition_model = AjanTransitionModel(112, DATA_P_T, None, PROBABILITY_QUERY_P_T, SAMPLE_QUERY_P_T, ARGMAX_QUERY_P_T)
+    # person_transition_model = TransitionModel("person", 112)
 
     def test_probability_right_right_perceive(self):
         next_state = AjanAgentState("Person", 112, {"id": 112, "pose": None, "gesture": "right"}, ["pose", "gesture"])
@@ -125,13 +127,13 @@ class TestPersonTransitionModelProbability(unittest.TestCase):
 
     def test_probability_right_right_move_left(self):
         next_state = AjanAgentState("Person", 112, {"id": 112, "pose": None, "gesture": "right"}, ["pose", "gesture"])
-        current_state = AjanAgentState("Person", 112, {"id": 112, "pose": (0, 0), "gesture": "right"}, ["pose", "gesture"])
+        current_state = AjanAgentState("Person", 112, {"id": 112, "pose": None, "gesture": "right"}, ["pose", "gesture"])
         action = AjanAction("move", {"motion": "left"})
         self.assertEqual(self.person_transition_model.probability(next_state, current_state, action), 0.999999999)
 
     def test_probability_right_left_move_left(self):
         next_state = AjanAgentState("Person", 112, {"id": 112, "pose": None, "gesture": "left"}, ["pose", "gesture"])
-        current_state = AjanAgentState("Person", 112, {"id": 112, "pose": (0, 0), "gesture": "right"}, ["pose", "gesture"])
+        current_state = AjanAgentState("Person", 112, {"id": 112, "pose": None, "gesture": "right"}, ["pose", "gesture"])
         action = AjanAction("move", {"motion": "left"})
         self.assertEqual(self.person_transition_model.probability(next_state, current_state, action), 1e-9)
 
@@ -149,7 +151,7 @@ class TestPersonTransitionModelProbability(unittest.TestCase):
 
     def test_probability_left_left_move_left(self):
         next_state = AjanAgentState("Person", 112, {"id": 112, "pose": None, "gesture": "left"}, ["pose", "gesture"])
-        current_state = AjanAgentState("Person", 112, {"id": 112, "pose": (0, 0), "gesture": "left"}, ["pose", "gesture"])
+        current_state = AjanAgentState("Person", 112, {"id": 112, "pose": None, "gesture": "left"}, ["pose", "gesture"])
         action = AjanAction("move", {"motion": "left"})
         self.assertEqual(self.person_transition_model.probability(next_state, current_state, action), 0.999999999)
 
@@ -173,7 +175,7 @@ class TestPersonTransitionModelProbability(unittest.TestCase):
 
     def test_probability_none_none_move_left(self):
         next_state = AjanAgentState("Person", 112, {"id": 112, "pose": None, "gesture": None}, ["pose", "gesture"])
-        current_state = AjanAgentState("Person", 112, {"id": 112, "pose": (0, 0), "gesture": None}, ["pose", "gesture"])
+        current_state = AjanAgentState("Person", 112, {"id": 112, "pose": None, "gesture": None}, ["pose", "gesture"])
         action = AjanAction("move", {"motion": "left"})
         self.assertEqual(self.person_transition_model.probability(next_state, current_state, action), 0.999999999)
 
