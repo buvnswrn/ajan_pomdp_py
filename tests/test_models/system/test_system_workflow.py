@@ -29,7 +29,7 @@ from tests.test_models.helpers.drone_agent_data import AGENT_DATA, ENV_DATA, RIG
 from tests.test_models.helpers.drone_reward_model_queries import PROBABILITY_QUERY_D_R, ARGMAX_QUERY_D_R, \
     SAMPLE_QUERY_D_R, DATA_D_R
 from tests.test_models.helpers.drone_transition_model_queries import DATA_D_T, SAMPLE_QUERY_D_T, ARGMAX_QUERY_D_T, \
-    PROBABILITY_QUERY_D_T
+    PROBABILITY_QUERY_D_T, SAMPLE_QUERY_D_T_2, PROBABILITY_QUERY_D_T_2, ARGMAX_QUERY_D_T_2
 from tests.test_models.helpers.observation_model_queries import (PROBABILITY_QUERY_OBS, DATA_OBS, SAMPLE_QUERY_OBS,
                                                                  ARGMAX_QUERY_OBS)
 from tests.test_models.helpers.person_reward_model_queries import DATA_P_R, PROBABILITY_QUERY_P_R, SAMPLE_QUERY_P_R, \
@@ -91,8 +91,8 @@ class TestSystemWorkflow(unittest.TestCase):
     # policy_model = PolicyModel()
     observation_model = AjanObservationModel(DATA_OBS, None, PROBABILITY_QUERY_OBS, SAMPLE_QUERY_OBS, ARGMAX_QUERY_OBS)
     # observation_model = ObservationModel(112)
-    agent_drone_transition_model = AjanTransitionModel(100, DATA_D_T, None, PROBABILITY_QUERY_D_T, SAMPLE_QUERY_D_T,
-                                                       ARGMAX_QUERY_D_T)
+    agent_drone_transition_model = AjanTransitionModel(100, DATA_D_T, None, PROBABILITY_QUERY_D_T_2, SAMPLE_QUERY_D_T_2,
+                                                       ARGMAX_QUERY_D_T_2)
     agent_person_transition_model = AjanTransitionModel(112, DATA_P_T, None, PROBABILITY_QUERY_P_T, SAMPLE_QUERY_P_T,
                                                         ARGMAX_QUERY_P_T)
     # agent_drone_transition_model = TransitionModel("drone", 100)
@@ -115,8 +115,8 @@ class TestSystemWorkflow(unittest.TestCase):
     # region Environment models
     person_reward_model = AjanRewardModel(DATA_P_R, None, PROBABILITY_QUERY_P_R, SAMPLE_QUERY_P_R, ARGMAX_QUERY_P_R)
     # person_reward_model = RewardModel(drone_id=100, person_id=112)
-    env_drone_transition_model = AjanTransitionModel(100, DATA_D_T, None, PROBABILITY_QUERY_D_T, SAMPLE_QUERY_D_T,
-                                                     ARGMAX_QUERY_D_T)
+    env_drone_transition_model = AjanTransitionModel(100, DATA_D_T, None, PROBABILITY_QUERY_D_T_2, SAMPLE_QUERY_D_T_2,
+                                                     ARGMAX_QUERY_D_T_2)
     env_person_transition_model = AjanTransitionModel(112, DATA_P_T, None, PROBABILITY_QUERY_P_T, SAMPLE_QUERY_P_T,
                                                       ARGMAX_QUERY_P_T)
     # env_drone_transition_model = TransitionModel("drone", 100)
