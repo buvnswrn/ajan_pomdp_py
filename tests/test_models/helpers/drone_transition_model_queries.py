@@ -184,7 +184,7 @@ ARGMAX_QUERY_D_T = """
     }
 """
 
-PROBABILITY_QUERY_D_T = """
+PROBABILITY_QUERY_D_T = """       
     PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
     PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
     PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -204,7 +204,7 @@ PROBABILITY_QUERY_D_T = """
         ?next_state_attributes pomdp-ns1:_pose ?next_pose .
         
         OPTIONAL {
-            ?next_pose rdf:x ?next_x .
+     ?next_pose rdf:x ?next_x .
             ?next_pose rdf:y ?next_y .
         }
         

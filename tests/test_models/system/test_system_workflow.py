@@ -25,7 +25,7 @@ from tests.test_models.alternate_models.python_observation_model import Observat
 from tests.test_models.alternate_models.python_policy_model import PolicyModel
 from tests.test_models.alternate_models.python_reward_model import RewardModel
 from tests.test_models.alternate_models.python_transition_model import TransitionModel
-from tests.test_models.helpers.drone_agent_data import AGENT_DATA, ENV_DATA, RIGHT_KEYPOINT
+from tests.test_models.helpers.drone_agent_data import AGENT_DATA, ENV_DATA, RIGHT_KEYPOINT, LEFT_KEYPOINT
 from tests.test_models.helpers.drone_reward_model_queries import PROBABILITY_QUERY_D_R, ARGMAX_QUERY_D_R, \
     SAMPLE_QUERY_D_R, DATA_D_R
 from tests.test_models.helpers.drone_transition_model_queries import DATA_D_T, SAMPLE_QUERY_D_T, ARGMAX_QUERY_D_T, \
@@ -45,7 +45,7 @@ def get_default_belief():
     right_person_state = AjanEnvObjectState("Person", 112, {"pose": None, "gesture": "right"})
     none_person_state = AjanEnvObjectState("Person", 112, {"pose": None, "gesture": None})
     drone_state = AjanAgentState("Drone", 100, {"pose": (0, 0), "gesture_found": False})
-    person = {left_person_state: 0.10, right_person_state: 0.85, none_person_state: 0.05}
+    person = {left_person_state: 0.25, right_person_state: 0.25, none_person_state: 0.50}
     drone = {drone_state: 1.0}
     belief_states = {"Person": person, "Drone": drone}
     return initialize_belief(0, 100, {0: belief_states}, "histogram")
@@ -54,7 +54,7 @@ def get_default_belief():
 def get_observation(action):
     action: AjanAction = action
     if action.name == "perceive":
-        return AjanObservation({"pose": RIGHT_KEYPOINT}, ["pose"])
+        return AjanObservation({"pose": LEFT_KEYPOINT}, ["pose"])
     else:
         return AjanObservation({"pose": None}, ["pose"])
 
@@ -171,6 +171,7 @@ class TestSystemWorkflow(unittest.TestCase):
             _time_used += time.time() - _start
             if self.problem.env.state.object_states[100].attributes["gesture_found"]:
                 print("Gesture Found!!")
+            print("Current reward: " + str(reward) + "Total Reward:" + str(self._total_reward))
 
 
 if __name__ == '__main__':
