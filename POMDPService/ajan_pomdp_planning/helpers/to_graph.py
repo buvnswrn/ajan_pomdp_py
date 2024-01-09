@@ -5,7 +5,7 @@ from rdflib import RDF, Graph, BNode, Literal
 import POMDPService.ajan_pomdp_planning.oopomdp.domain.action as _action_helper
 import POMDPService.ajan_pomdp_planning.oopomdp.domain.observation as _observation_helper
 from POMDPService.ajan_pomdp_planning.helpers.converters import get_data_from_graph, get_value_to_graph_literal
-from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanOOState, AjanEnvObjectState, AjanAgentState
+import POMDPService.ajan_pomdp_planning.oopomdp.domain.state as _state_helper
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import createIRI, _State, _CurrentAction, _Action, \
     _CurrentState, _NextState, pomdp_ns, _Attributes, _CurrentObservation, _Observation, _To_Print, _PlannedAction, \
     pomdp_ns1
@@ -93,7 +93,7 @@ def add_state_to_graph(graph, state, namespace):
     graph.add((namespace, RDF.value, state.state_subject))
     graph += state.graph
     # add the type to the attributes node so that we can query it
-    if not type(state) == AjanOOState:
+    if not type(state) == _state_helper.AjanOOState:
         graph.add((state.attributes_node, RDF.type, namespace))
     else:
         for key, value in state.object_states.items():
@@ -115,7 +115,7 @@ def add_action_to_graph(graph, action, namespace=_CurrentAction):
 
 
 def check_state(model_id, state):
-    if isinstance(state, AjanOOState):
+    if isinstance(state, _state_helper.AjanOOState):
         state = state.object_states[model_id]
     return state
 
@@ -124,7 +124,7 @@ def remove_state_from_graph(graph, state, namespace):
     graph.remove((namespace, RDF.value, state.state_subject))
     graph -= state.graph
     # add the type to the attributes node so that we can query it
-    if type(state) != AjanOOState:
+    if type(state) != _state_helper.AjanOOState:
         graph.remove((state.attributes_node, RDF.type, namespace))
     else:
         for key, value in state.object_states.items():
@@ -177,9 +177,9 @@ def get_state_from_graph(graph, state_uri):
     state_attributes_node = result['attributes']
     state_attributes = get_attributes_from_graph(graph, state_attributes_node)
     if state_type.lower() == "env":
-        result_state = AjanEnvObjectState(state_name, state_id, attributes=state_attributes)
+        result_state = _state_helper.AjanEnvObjectState(state_name, state_id, attributes=state_attributes)
     elif state_type.lower() == "agent":
-        result_state = AjanAgentState(state_name, state_id, state_attributes)
+        result_state = _state_helper.AjanAgentState(state_name, state_id, state_attributes)
     else:
         raise ValueError("Unknown state type: %s" % state_type)
     return result_state
