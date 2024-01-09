@@ -3,9 +3,10 @@ import matplotlib.pyplot as plt
 
 # Load the first pstat file
 stats1 = pstats.Stats('../results/system_test_with_all_ajan_model_not_optimized.pstat')
+poi = "pyparsing"
 
 # Extract the "rdflib" function names and time spent for functions
-function_times1 = {k[2]: v[2] for k, v in stats1.stats.items() if "rdflib" in k[0]}
+function_times1 = {k[2]: v[2] for k, v in stats1.stats.items() if poi in k[0]}
 
 # Sort the functions by time spent and get the top 10
 function_times1_sorted = dict(sorted(function_times1.items(), key=lambda item: item[1], reverse=True))
@@ -13,7 +14,7 @@ function_times1_top_10 = dict(sorted(function_times1.items(), key=lambda item: i
 
 # Repeat the process for the second pstat file
 stats2 = pstats.Stats('../results/system_test_with_all_ajan_model_optimized.pstat')
-function_times2 = {k[2]: v[2] for k, v in stats2.stats.items() if "rdflib" in k[0]}
+function_times2 = {k[2]: v[2] for k, v in stats2.stats.items() if poi in k[0]}
 function_times2_sorted = dict(sorted(function_times2.items(), key=lambda item: item[1], reverse=True))
 function_times2_top_10 = dict(sorted(function_times2.items(), key=lambda item: item[1], reverse=True)[:10])
 
@@ -36,7 +37,18 @@ plt.bar(x, common_times1, width=0.4, label='Not Optimized', color='b', align='ce
 plt.bar(x, common_times2, width=0.4, label='Optimized', color='r', align='edge')
 plt.xlabel('Function')
 plt.ylabel('Time spent (seconds)')
-plt.title('Time spent in common functions for both queries')
+plt.title('Time spent in common '+poi+' functions for both queries')
 plt.xticks(x, common_functions, rotation=90)  # Rotate the x-axis labels for readability
+plt.legend()
+plt.show()
+
+# Plot the time spent for each function in both files
+x = range(len(all_functions))
+plt.bar(x, times1, width=0.4, label='Not Optimized', color='b', align='center')
+plt.bar(x, times2, width=0.4, label='Optimized', color='r', align='edge')
+plt.xlabel('Function')
+plt.ylabel('Time spent (seconds)')
+plt.title('Time spent in top 10 '+poi+' functions for both queries')
+plt.xticks(x, all_functions, rotation=90)  # Rotate the x-axis labels for readability
 plt.legend()
 plt.show()
