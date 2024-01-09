@@ -37,7 +37,7 @@ from tests.test_models.helpers.person_reward_model_queries import DATA_P_R, PROB
 from tests.test_models.helpers.person_transition_model_queries import DATA_P_T, PROBABILITY_QUERY_P_T, SAMPLE_QUERY_P_T, \
     ARGMAX_QUERY_P_T
 from tests.test_models.helpers.policy_model_queries import ROLLOUT_QUERY_POLICY, SAMPLE_QUERY_POLICY, \
-    GET_ALL_ACTIONS_QUERY, DATA_POLICY
+    GET_ALL_ACTIONS_QUERY, DATA_POLICY, GET_ALL_ACTIONS_QUERY1, ROLLOUT_QUERY_POLICY1, SAMPLE_QUERY_POLICY1
 
 
 def get_default_belief():
@@ -87,7 +87,7 @@ class TestSystemWorkflow(unittest.TestCase):
     rdflib.plugins.sparql.CUSTOM_EVALS["semantic_field_near"] = semantic_fields.near
 
     # region Agent models
-    policy_model = AjanPolicyModel(DATA_POLICY, None, SAMPLE_QUERY_POLICY, ROLLOUT_QUERY_POLICY, GET_ALL_ACTIONS_QUERY)
+    policy_model = AjanPolicyModel(DATA_POLICY, None, SAMPLE_QUERY_POLICY1, ROLLOUT_QUERY_POLICY1, GET_ALL_ACTIONS_QUERY1)
     # policy_model = PolicyModel()
     observation_model = AjanObservationModel(DATA_OBS, None, PROBABILITY_QUERY_OBS, SAMPLE_QUERY_OBS, ARGMAX_QUERY_OBS)
     # observation_model = ObservationModel(112)

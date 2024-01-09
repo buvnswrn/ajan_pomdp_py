@@ -16,6 +16,27 @@ SAMPLE_QUERY_POLICY = """
     }
     }
 """
+SAMPLE_QUERY_POLICY1 = """
+    PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
+    PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
+    PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    CONSTRUCT {pomdp-ns:Action rdf:value ?actionNode .
+        ?actionNode pomdp-ns:attributes ?attributeNode .
+        ?attributeNode ?attribute ?attrValue .
+    } WHERE {
+        [pomdp-ns1:_gesture_found ?gesture_found] .
+        [pomdp-ns1:_gesture ?gesture] .
+    BIND( IF(?gesture_found && ?gesture!=rdf:nil, pomdp-ns1:Action_move, pomdp-ns1:Action_perceive) as ?actionNode).
+    
+    OPTIONAL {
+    FILTER(?gesture_found && ?gesture!=rdf:nil) .
+    {SELECT DISTINCT ?attributeNode WHERE {
+    ?actionNode pomdp-ns:attributes ?attributeNode .
+    }ORDER BY RAND() LIMIT 1}
+    ?attributeNode ?attribute ?attrValue . 
+    }
+    }
+"""
 
 ROLLOUT_QUERY_POLICY = """
     PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
@@ -35,6 +56,27 @@ ROLLOUT_QUERY_POLICY = """
     }
     }
 """
+ROLLOUT_QUERY_POLICY1 = """
+    PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
+    PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
+    PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    CONSTRUCT {pomdp-ns:Action rdf:value ?actionNode .
+        ?actionNode pomdp-ns:attributes ?attributeNode .
+        ?attributeNode ?attribute ?attrValue .
+    } WHERE {
+        [pomdp-ns1:_gesture_found ?gesture_found] .
+        [pomdp-ns1:_gesture ?gesture] .
+    BIND( IF(?gesture_found && ?gesture!=rdf:nil, pomdp-ns1:Action_move, pomdp-ns1:Action_perceive) as ?actionNode).
+    
+    OPTIONAL {
+    FILTER(?gesture_found && ?gesture!=rdf:nil) .
+    {SELECT DISTINCT ?attributeNode WHERE {
+    ?actionNode pomdp-ns:attributes ?attributeNode .
+    }ORDER BY RAND() LIMIT 1}
+    ?attributeNode ?attribute ?attrValue . 
+    }
+    }
+"""
 
 GET_ALL_ACTIONS_QUERY = """
     PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
@@ -47,6 +89,28 @@ GET_ALL_ACTIONS_QUERY = """
         pomdp-ns:Action rdf:value ?actionNode .
     }}
     OPTIONAL {
+    {SELECT DISTINCT ?attributeNode WHERE {
+    ?actionNode pomdp-ns:attributes ?attributeNode .
+    }}
+    ?attributeNode ?attribute ?attrValue . 
+    }
+    }
+"""
+GET_ALL_ACTIONS_QUERY1 = """
+    PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
+    PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
+    PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    CONSTRUCT {pomdp-ns:Action rdf:value ?actionNode .
+        ?actionNode pomdp-ns:attributes ?attributeNode .
+        ?attributeNode ?attribute ?attrValue .
+    } WHERE {
+        [pomdp-ns1:_gesture_found ?gesture_found] .
+        [pomdp-ns1:_gesture ?gesture] .
+    
+    BIND( IF(?gesture_found && ?gesture!=rdf:nil, pomdp-ns1:Action_move, pomdp-ns1:Action_perceive) as ?actionNode).
+    
+    OPTIONAL {
+    FILTER(?gesture_found && ?gesture!=rdf:nil) .
     {SELECT DISTINCT ?attributeNode WHERE {
     ?actionNode pomdp-ns:attributes ?attributeNode .
     }}

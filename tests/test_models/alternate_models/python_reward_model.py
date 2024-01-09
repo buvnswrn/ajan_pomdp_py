@@ -29,6 +29,9 @@ class RewardModel(pomdp_py.RewardModel):
                 return 0
             if (not drone_state.attributes["gesture_found"]) and drone_next_state.attributes["gesture_found"]:
                 reward += self.big
+        if action.name == "move":
+            if not drone_state.attributes["gesture_found"]:
+                reward -= self.big
         if self.person_id is not None:
             person_state = state.object_states[self.person_id]
             person_next_state = next_state.object_states[self.person_id]
@@ -42,3 +45,4 @@ class RewardModel(pomdp_py.RewardModel):
                     else:
                         reward -= self.big
         return reward
+
