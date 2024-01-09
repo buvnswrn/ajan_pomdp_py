@@ -7,12 +7,13 @@ from POMDPService.ajan_pomdp_planning.oopomdp.domain.action import AjanAction
 from POMDPService.ajan_pomdp_planning.oopomdp.domain.state import AjanAgentState, AjanOOState
 from POMDPService.ajan_pomdp_planning.oopomdp.models.transition_model import AjanTransitionModel
 from tests.test_models.alternate_models.python_transition_model import TransitionModel
-from tests.test_models.helpers.drone_transition_model_queries import DATA_D_T, SAMPLE_QUERY_D_T, ARGMAX_QUERY_D_T, PROBABILITY_QUERY_D_T
+from tests.test_models.helpers.drone_transition_model_queries import DATA_D_T, SAMPLE_QUERY_D_T, ARGMAX_QUERY_D_T, \
+    PROBABILITY_QUERY_D_T, PROBABILITY_QUERY_D_T_2
 
 
 class TestDroneTransitionModelProbability(unittest.TestCase):
 
-    drone_transition_model = AjanTransitionModel(100, DATA_D_T, None, PROBABILITY_QUERY_D_T, SAMPLE_QUERY_D_T, ARGMAX_QUERY_D_T)
+    drone_transition_model = AjanTransitionModel(100, DATA_D_T, None, PROBABILITY_QUERY_D_T_2, SAMPLE_QUERY_D_T, ARGMAX_QUERY_D_T)
 
     # drone_transition_model = TransitionModel("drone", 100)
 

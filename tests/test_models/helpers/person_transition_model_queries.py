@@ -11,8 +11,8 @@ SAMPLE_QUERY_P_T = """
         pomdp-ns:State rdfs:value ?state .
         ?state rdfs:type pomdp-ns:State .
         ?state pomdp-ns:id ?stateId .
-        ?state pomdp-ns:name ?stateName .
-        ?state pomdp-ns:type ?stateType .
+        ?state pomdp-ns:name "Person" .
+        ?state pomdp-ns:type "env" .
         ?state pomdp-ns:attributes ?attributes .
         ?state pomdp-ns:to_print ?to_print_node .
         ?to_print_node rdfs:value "gesture" .
@@ -28,21 +28,17 @@ SAMPLE_QUERY_P_T = """
     }
     WHERE{
         pomdp-ns:current_state rdfs:value ?state .
-        ?state pomdp-ns:name ?stateName .
-        ?state pomdp-ns:type ?stateType .
-
         pomdp-ns:current_action rdfs:value ?action .
         ?state pomdp-ns:id ?stateId .
-        ?state pomdp-ns:attributes ?attributesNode .
-        ?attributesNode pomdp-ns1:_pose ?poseNode .
-        ?attributesNode pomdp-ns1:_gesture ?gesture .
+        ?state pomdp-ns:attributes [
+        pomdp-ns1:_pose ?poseNode ;
+        pomdp-ns1:_gesture ?gesture ] .
 
         OPTIONAL{    
             ?poseNode rdfs:x ?xValue .
             ?poseNode rdfs:y ?yValue .
             BIND(pomdp-data-ns:2dVector as ?poseType) .
-            ?action pomdp-ns:attributes ?actionAttributes .
-            ?actionAttributes pomdp-ns1:_motion ?motionType .
+            ?action pomdp-ns:attributes/pomdp-ns1:_motion ?motionType .
         }
 
         BIND(BNODE() as ?attributes) .
