@@ -184,6 +184,66 @@ ARGMAX_QUERY_D_T = """
     }
 """
 
+ARGMAX_QUERY_D_T_2 = """
+    PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
+    PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
+    PREFIX pomdp-data-ns:<http://www.dfki.de/pomdp-ns/POMDP/data/>
+    PREFIX rdfs:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+    CONSTRUCT {
+        pomdp-ns:State rdfs:value ?state .
+        ?state rdfs:type pomdp-ns:State .
+        ?state pomdp-ns:id ?stateId .
+        ?state pomdp-ns:name "Drone" .
+        ?state pomdp-ns:type "agent" .
+        ?state pomdp-ns:attributes ?attributes .
+        ?state pomdp-ns:to_print ?to_print_node .
+        ?to_print_node rdfs:value "gesture_found" .
+        ?attributes pomdp-ns1:_id ?stateId .
+
+        ?attributes pomdp-ns1:_gesture_found ?gestureValue .
+
+        ?attributes pomdp-ns1:_pose ?poseNew .
+        ?poseNew rdfs:type pomdp-data-ns:2dVector .
+        ?poseNew rdfs:x ?xValue .
+        ?poseNew rdfs:y ?yValue .
+
+    }
+    WHERE{
+        pomdp-ns:current_state rdfs:value ?state .
+        pomdp-ns:current_action rdfs:value ?action .
+        ?state pomdp-ns:id ?stateId .
+        [pomdp-ns1:_pose ?poseNode ;
+         pomdp-ns1:_gesture_found ?gesture ] .
+        
+        OPTIONAL {
+            ?poseNode rdfs:x ?xPose .
+            ?poseNode rdfs:y ?yPose .
+        }
+        
+        OPTIONAL{    
+            ?action pomdp-ns:attributes/pomdp-ns1:_motion ?motionType .
+        }
+
+        BIND(BNODE() as ?attributes) .
+        BIND(BNODE() as ?to_print_node) .
+        BIND(BNODE() as ?pose) .
+        
+        BIND(IF(?poseNode = rdfs:nil && ?action=pomdp-ns1:Action_perceive, rdfs:nil, ?pose) as ?poseNew) .
+
+        BIND(IF (?action=pomdp-ns1:Action_move && ?motionType ="right",
+                ?xPose+1,?xPose) as ?xValue) .
+        BIND(IF (?action=pomdp-ns1:Action_move && ?motionType ="left",
+                ?xPose-1,?xValue) as ?xValue) .
+        BIND(IF(?action=pomdp-ns1:Action_move,?yPose+1,?yPose) as ?yValue) .
+        BIND(IF(?action=pomdp-ns1:Action_perceive, 
+                IF(RAND()>0.5,"true"^^xsd:boolean,"false"^^xsd:boolean), 
+            "false"^^xsd:boolean) as ?gestureValue) .
+        ?s ?p ?o  .
+    }
+"""
+
 PROBABILITY_QUERY_D_T = """       
     PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
     PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
