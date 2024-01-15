@@ -7,7 +7,7 @@ from rdflib.term import Node, URIRef
 from typing import Union, Any
 
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import _rdf, _2dVector, _3dVector, _Pandas, createIRI, \
-    _Point
+    _Point, _4dVector
 
 
 def parse_pandas(graph: Graph, o):
@@ -40,6 +40,15 @@ def from_3dVector(graph: Graph, vector_node) -> tuple:
     return x_value, y_value, z_value
 
 
+def from_4dVector(graph: Graph, vector_node) -> tuple:
+    x_value, y_value, z_value = from_3dVector(graph, vector_node)
+    w_value = [x for _, _, x in graph.triples((vector_node, _rdf.w, None))][0]
+    h_value = [x for _, _, x in graph.triples((vector_node, _rdf.h, None))][0]
+    w_value = get_data_from_graph(w_value)
+    h_value = get_data_from_graph(h_value)
+    return x_value, y_value, z_value, w_value, h_value
+
+
 def to_2dVector(graph: Graph, x, y) -> BNode:
     vector_value = BNode()
     graph.add((vector_value, RDF.type, _2dVector))
@@ -54,6 +63,16 @@ def to_3dVector(graph: Graph, x, y, z) -> BNode:
     graph.add((vector_value, _rdf.x, get_value_to_graph_literal(x)))
     graph.add((vector_value, _rdf.y, get_value_to_graph_literal(y)))
     graph.add((vector_value, _rdf.z, get_value_to_graph_literal(z)))
+    return vector_value
+
+
+def to_4dVector(graph: Graph, x, y, w, h) -> BNode:
+    vector_value = BNode()
+    graph.add((vector_value, RDF.type, _4dVector))
+    graph.add((vector_value, _rdf.x, get_value_to_graph_literal(x)))
+    graph.add((vector_value, _rdf.y, get_value_to_graph_literal(y)))
+    graph.add((vector_value, _rdf.w, get_value_to_graph_literal(w)))
+    graph.add((vector_value, _rdf.h, get_value_to_graph_literal(h)))
     return vector_value
 
 
@@ -95,6 +114,8 @@ def get_data_from_graph(o: Union[Literal, BNode, Any], graph: Graph = None) -> U
                 return from_2dVector(graph, o)
             elif data_type == _3dVector:
                 return from_3dVector(graph, o)
+            elif data_type == _4dVector:
+                return from_4dVector(graph, o)
     elif o == RDF.nil:
         return None
     else:
