@@ -91,5 +91,5 @@ def set_next_state(env_state_meta_data: EnvStateInit):
     env: AjanEnvironment = problem.env
     next_state = last_env_next_state[pomdp_id]
     next_state.object_states[state_id] = _state
-    env.apply_transition(next_state)
+    env.apply_transition(next_state) # check whether needs to be applied or not
     return BooleanResponse(success=True, message="Next state is set")
