@@ -43,9 +43,11 @@ GET_ALL_ACTIONS_QUERY = """
     ?attributeNode ?attribute ?attrValue .
     }
     UNION {
-    [pomdp-ns1:_complete_status false] .
+    [pomdp-ns1:_complete_status ?complete_status] .
     [pomdp-ns1:_direction ?direction] .
-    FILTER(?complete_status && ?direction = "left") .
+    FILTER(?complete_status) .
+    [pomdp-ns1:_inspection_state ?inspection_state] .
+    FILTER(?inspection_state != 2) .
     ?actionNode pomdp-ns:attributes ?attributeNode .
     BIND(IF(?direction="left", "right", "left") as ?action_motion) . 
     ?attributeNode pomdp-ns1:_motion ?action_motion . 
