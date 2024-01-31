@@ -1,4 +1,72 @@
 SAMPLE_QUERY_POLICY = """
+    PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
+    PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
+    PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    CONSTRUCT {pomdp-ns:Action rdf:value ?actionNode .
+        ?actionNode pomdp-ns:attributes ?attributeNode .
+        ?attributeNode ?attribute ?attrValue .
+    } WHERE {
+    
+    {SELECT ?attributeNode ?attribute ?attrValue ?actionNode {
+    
+    {
+    
+    [pomdp-ns1:_complete_status ?complete_status] .
+    [pomdp-ns1:_direction ?direction].
+    [pomdp-ns1:_inspection_state ?inspection_state] .
+    [pomdp-ns1:_rack_id ?rack_id].
+    
+    BIND (IF(!?complete_status && (?inspection_state = 0 || ?inspection_state = 1), pomdp-ns1:Action_perceive,pomdp-ns1:Action_move) AS ?actionNode) .
+    }
+    
+    UNION {
+    [pomdp-ns1:_inspection_state ?inspection_state] .
+    [pomdp-ns1:_rack_id ?rack_id] .
+    FILTER(?inspection_state = 2) .
+    FILTER(?rack_id > 1) .
+    ?actionNode pomdp-ns:attributes ?attributeNode .
+    ?attributeNode pomdp-ns1:_motion "down" . 
+    ?attributeNode ?attribute ?attrValue .
+    }
+    
+    UNION {
+    [pomdp-ns1:_inspection_state ?inspection_state] .
+    [pomdp-ns1:_rack_id ?rack_id] .
+    FILTER(?inspection_state = 2) .
+    FILTER(?rack_id < 4) .
+    ?actionNode pomdp-ns:attributes ?attributeNode .
+    ?attributeNode pomdp-ns1:_motion "up" . 
+    ?attributeNode ?attribute ?attrValue .
+    }
+    UNION {
+    [pomdp-ns1:_complete_status ?complete_status] .
+    [pomdp-ns1:_direction ?direction] .
+    FILTER(?complete_status) .
+    [pomdp-ns1:_inspection_state ?inspection_state] .
+    FILTER(?inspection_state != 2) .
+    ?actionNode pomdp-ns:attributes ?attributeNode .
+    BIND(IF(?direction="left", "right", "left") as ?action_motion) . 
+    ?attributeNode pomdp-ns1:_motion ?action_motion . 
+    ?attributeNode ?attribute ?attrValue .
+    }
+    
+    UNION {
+    pomdp-ns:Action rdf:value ?actionNode .
+    OPTIONAL {
+    ?actionNode pomdp-ns:attributes ?attributeNode .
+    ?attributeNode ?attribute ?attrValue .
+    }
+    FILTER NOT EXISTS {
+    [pomdp-ns1:_complete_status ?complete_status] .
+    [pomdp-ns1:_direction ?direction].
+    [pomdp-ns1:_inspection_state ?inspection_state] .
+    [pomdp-ns1:_rack_id ?rack_id].
+    }
+    }
+    
+    } ORDER BY RAND() LIMIT 1}
+    
+    } 
 """
 
 ROLLOUT_QUERY_POLICY = """
