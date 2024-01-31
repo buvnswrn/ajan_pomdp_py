@@ -18,7 +18,7 @@ class TestPolicyModelSample(unittest.TestCase):
     policy_model = AjanPolicyModel(DATA_POLICY, None, SAMPLE_QUERY_POLICY, ROLLOUT_QUERY_POLICY, GET_ALL_ACTIONS_QUERY)
 
     def test_sample_2_left_false_2_0(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 2, "inspection_state": 0},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -30,7 +30,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, Perceive)  # only perceive since that is the best action
 
     def test_sample_2_left_false_2_1(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 2, "inspection_state": 1},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -42,7 +42,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, Perceive)
 
     def test_sample_2_left_false_2_2(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 2, "inspection_state": 2},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -54,7 +54,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertIn(actions, [MoveUp, MoveDown])
 
     def test_sample_3_left_false_3_0(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 3, "inspection_state": 0},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -66,7 +66,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, Perceive)
 
     def test_sample_3_left_false_3_1(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 3, "inspection_state": 1},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -78,7 +78,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, Perceive)
 
     def test_sample_3_left_false_3_2(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 3, "inspection_state": 2},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -90,7 +90,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertIn(actions, [MoveUp, MoveDown])
 
     def test_sample_4_left_false_4_0(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 4, "inspection_state": 0},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -102,7 +102,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, Perceive)
 
     def test_sample_4_left_false_4_1(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 4, "inspection_state": 1},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -114,7 +114,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, Perceive)
 
     def test_sample_4_left_false_4_2(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 4, "inspection_state": 2},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -126,7 +126,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveDown)
 
     def test_sample_2_left_true_2_1(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 2, "inspection_state": 1},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -137,7 +137,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveRight)
 
     def test_sample_2_left_true_2_2(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 2, "inspection_state": 2},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -148,7 +148,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertIn(actions, [MoveUp, MoveDown])
 
     def test_sample_3_left_true_3_1(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 3, "inspection_state": 1},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -159,7 +159,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveRight)
 
     def test_sample_3_left_true_3_2(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 3, "inspection_state": 2},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -170,7 +170,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertIn(actions, [MoveUp, MoveDown])
 
     def test_sample_4_left_true_4_1(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 4, "inspection_state": 1},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -181,7 +181,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveRight)
 
     def test_sample_4_left_true_4_2(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 4, "inspection_state": 2},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -192,7 +192,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveDown)
 
     def test_sample_1_left_false_1_0(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 1, "inspection_state": 0},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -203,7 +203,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, Perceive)
 
     def test_sample_1_left_false_1_1(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 1, "inspection_state": 1},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -214,7 +214,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, Perceive)
 
     def test_sample_1_left_false_1_2(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 1, "inspection_state": 2},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -225,7 +225,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveUp)
 
     def test_sample_1_left_true_1_1(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 1, "inspection_state": 1},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -236,7 +236,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveRight)
 
     def test_sample_1_left_true_1_2(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 1, "inspection_state": 2},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -247,7 +247,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveUp)
 
     # def test_sample_1_left_true_1_0(self):
-    #     state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+    #     state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
     #                                                  {"rack_id": 1, "inspection_state": 0},
     #                                                  ["rack_id", "inspection_state"]),
     #                          100: AjanAgentState("Drone", 100,
@@ -258,7 +258,7 @@ class TestPolicyModelSample(unittest.TestCase):
     #     self.assertEqual(actions, MoveRight)
 
     def test_sample_2_right_false_2_0(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 2, "inspection_state": 0},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -269,7 +269,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, Perceive)
 
     def test_sample_2_right_false_2_1(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 2, "inspection_state": 1},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -280,7 +280,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, Perceive)
 
     def test_sample_2_right_false_2_2(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 2, "inspection_state": 2},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -291,7 +291,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertIn(actions, [MoveUp, MoveDown])
 
     def test_sample_3_right_false_3_0(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 3, "inspection_state": 0},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -302,7 +302,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, Perceive)
 
     def test_sample_3_right_false_3_1(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 3, "inspection_state": 1},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -313,7 +313,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, Perceive)
 
     def test_sample_3_right_false_3_2(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 3, "inspection_state": 2},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -324,7 +324,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertIn(actions, [MoveUp, MoveDown])
 
     def test_sample_4_right_false_4_0(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 4, "inspection_state": 0},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -335,7 +335,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, Perceive)
 
     def test_sample_4_right_false_4_1(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 4, "inspection_state": 1},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -346,7 +346,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, Perceive)
 
     def test_sample_4_right_false_4_2(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 4, "inspection_state": 2},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -357,7 +357,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveDown)
 
     def test_sample_2_right_true_2_1(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 2, "inspection_state": 1},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -368,7 +368,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveLeft)
 
     def test_sample_2_right_true_2_2(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 2, "inspection_state": 2},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -379,7 +379,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertIn(actions, [MoveUp, MoveDown])
 
     def test_sample_3_right_true_3_1(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 3, "inspection_state": 1},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -390,7 +390,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveLeft)
 
     def test_sample_3_right_true_3_2(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 3, "inspection_state": 2},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -401,7 +401,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertIn(actions, [MoveUp, MoveDown])
 
     def test_sample_4_right_true_4_1(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 4, "inspection_state": 1},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -412,7 +412,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveLeft)
 
     def test_sample_4_right_true_4_2(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 4, "inspection_state": 2},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -423,7 +423,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveDown)
 
     def test_sample_1_right_false_1_0(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 1, "inspection_state": 0},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -434,7 +434,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, Perceive)
 
     def test_sample_1_right_false_1_1(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 1, "inspection_state": 1},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -445,7 +445,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, Perceive)
 
     def test_sample_1_right_false_1_2(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 1, "inspection_state": 2},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -456,7 +456,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveUp)
 
     def test_sample_1_right_true_1_1(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 1, "inspection_state": 1},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -467,7 +467,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveLeft)
 
     def test_sample_1_right_true_1_2(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 1, "inspection_state": 2},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -478,7 +478,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveUp)
 
     def test_sample_1_right_true_1_0(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 1, "inspection_state": 0},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -489,7 +489,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveLeft)
 
     def test_sample_2_right_true_2_0(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 2, "inspection_state": 0},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -500,7 +500,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveLeft)
 
     def test_sample_3_right_true_3_0(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 3, "inspection_state": 0},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -511,7 +511,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveLeft)
 
     def test_sample_4_right_true_4_0(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 4, "inspection_state": 0},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -522,7 +522,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveLeft)
 
     def test_sample_1_left_true_1_0(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 1, "inspection_state": 0},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -533,7 +533,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveRight)
 
     def test_sample_2_left_true_2_0(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 2, "inspection_state": 0},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -544,7 +544,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveRight)
 
     def test_sample_3_left_true_3_0(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 3, "inspection_state": 0},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
@@ -555,7 +555,7 @@ class TestPolicyModelSample(unittest.TestCase):
         self.assertEqual(actions, MoveRight)
 
     def test_sample_4_left_true_4_0(self):
-        state = AjanOOState({112: AjanEnvObjectState("Shelf", 115,
+        state = AjanOOState({115: AjanEnvObjectState("Shelf", 115,
                                                      {"rack_id": 4, "inspection_state": 0},
                                                      ["rack_id", "inspection_state"]),
                              100: AjanAgentState("Drone", 100,
