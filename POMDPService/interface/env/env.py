@@ -63,6 +63,8 @@ def get_env_state(env_state_meta_data: EnvStateInit):
         # cache the computed state for future use
         last_env_next_state[pomdp_id] = next_state
         next_env_state = next_state.object_states[state_id]
+    elif state_type == "last":
+        next_env_state = last_env_next_state[pomdp_id].object_states[state_id]
     else:
         next_env_state = problems[pomdp_id].env.state.object_states[state_id]
 
@@ -91,5 +93,8 @@ def set_next_state(env_state_meta_data: EnvStateInit):
     env: AjanEnvironment = problem.env
     next_state = last_env_next_state[pomdp_id]
     next_state.object_states[state_id] = _state
-    env.apply_transition(next_state) # check whether needs to be applied or not
+    if env_state_meta_data.apply:  # check whether it needs to be applied or not
+        env.apply_transition(next_state)
+    else:
+        last_env_next_state[pomdp_id] = next_state
     return BooleanResponse(success=True, message="Next state is set")

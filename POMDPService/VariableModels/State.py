@@ -39,6 +39,7 @@ class EnvStateInit(BaseModel):
     state_id: int
     type: str = None
     data: str = None  # for update
+    apply: bool = True
 
 
 class ActionInit(BaseModel):
