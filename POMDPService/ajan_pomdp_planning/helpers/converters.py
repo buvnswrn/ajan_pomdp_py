@@ -7,7 +7,7 @@ from rdflib.term import Node, URIRef
 from typing import Union, Any
 
 from POMDPService.ajan_pomdp_planning.vocabulary.POMDPVocabulary import _rdf, _2dVector, _3dVector, _Pandas, createIRI, \
-    _Point, _4dVector
+    _Point, _4dVector, _Vector
 
 
 def parse_pandas(graph: Graph, o):
@@ -23,6 +23,12 @@ def parse_pandas(graph: Graph, o):
     for point in points:
         temp_graph += graph.triples((point, None, None))
     return rdfpandas.to_dataframe(temp_graph)
+
+
+def from_Vector(graph: Graph, o) -> list:
+    x_value = [x for _, _, x in graph.triples((o, RDF.value, None))]
+    x_value = [get_data_from_graph(x, graph) for x in x_value]
+    return x_value
 
 
 def from_2dVector(graph: Graph, o) -> tuple:
@@ -41,12 +47,20 @@ def from_3dVector(graph: Graph, vector_node) -> tuple:
 
 
 def from_4dVector(graph: Graph, vector_node) -> tuple:
-    x_value, y_value, z_value = from_3dVector(graph, vector_node)
+    x_value, y_value = from_2dVector(graph, vector_node)
     w_value = [x for _, _, x in graph.triples((vector_node, _rdf.w, None))][0]
     h_value = [x for _, _, x in graph.triples((vector_node, _rdf.h, None))][0]
     w_value = get_data_from_graph(w_value)
     h_value = get_data_from_graph(h_value)
-    return x_value, y_value, z_value, w_value, h_value
+    return x_value, y_value, w_value, h_value
+
+
+def to_Vector(graph: Graph, value_list) -> BNode:
+    vector_value = BNode()
+    graph.add((vector_value, RDF.type, _Vector))
+    for value in value_list:
+        graph.add((vector_value, RDF.value, get_value_to_graph_literal(value)))
+    return vector_value
 
 
 def to_2dVector(graph: Graph, x, y) -> BNode:
@@ -116,6 +130,8 @@ def get_data_from_graph(o: Union[Literal, BNode, Any], graph: Graph = None) -> U
                 return from_3dVector(graph, o)
             elif data_type == _4dVector:
                 return from_4dVector(graph, o)
+            elif data_type == _Vector:
+                return from_Vector(graph, o)
     elif o == RDF.nil:
         return None
     else:
@@ -132,9 +148,13 @@ def get_value_to_graph_literal(o, graph=None):
             return to_2dVector(graph, o[0], o[1])
         elif len(o) == 3:
             return to_3dVector(graph, o[0], o[1], o[2])
-        elif len(o) > 3:
-            print("Tuple size is greater than 3")
-            return Literal(o)
+        elif len(o) == 4:
+            return to_4dVector(graph, o[0], o[1], o[2], o[3])
+        else:
+            print("Tuple size is not 2 or 3, so converting to RDF vector")
+            return to_Vector(graph, o)
+    elif type(o) is list:
+        return to_Vector(graph, o)
     elif type(o) is ndarray:
         return to_GraphDataFrame(graph, DataFrame(o))
     elif type(o) is DataFrame:

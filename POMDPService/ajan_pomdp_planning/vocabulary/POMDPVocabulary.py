@@ -44,6 +44,7 @@ _Pandas = pomdp_data_ns["pandasDataFrame"]
 _2dVector = pomdp_data_ns["2dVector"]
 _3dVector = pomdp_data_ns["3dVector"]
 _4dVector = pomdp_data_ns["4dVector"]
+_Vector = pomdp_data_ns["Vector"]
 
 _Point = pomdp_data_ns["Point"]
 # Action Selector is not needed.
