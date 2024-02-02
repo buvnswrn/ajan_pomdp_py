@@ -11,6 +11,7 @@ CONSTRUCT {
     pomdp-ns:Observation pomdp-ns:attributes [
     pomdp-ns1:_object_id 0;
     pomdp-ns1:_objects ?poseNode;
+    pomdp-ns1:_average_probability ?Box_1_probability;
     ?keypoint9 [ rdfs:type ?keypoint9_type ;
                 rdfs:x ?xValue9 ;
                 rdfs:y ?yValue9 ;
@@ -59,6 +60,7 @@ CONSTRUCT {
     pomdp-ns:Observation pomdp-ns:attributes [
     pomdp-ns1:_object_id 0;
     pomdp-ns1:_objects ?poseNode;
+    pomdp-ns1:_average_probability ?Box_1_probability;
     ?keypoint9 [ rdfs:type ?keypoint9_type ;
                 rdfs:x ?xValue9 ;
                 rdfs:y ?yValue9 ;
@@ -98,24 +100,14 @@ PROBABILITY_QUERY_OBS = """
 PREFIX pomdp-ns:<http://www.dfki.de/pomdp-ns#>
 PREFIX pomdp-ns1:<http://www.dfki.de/pomdp-ns/>
 PREFIX rdfs:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
 SELECT ?probability
 WHERE{
     pomdp-ns:current_action rdfs:value ?action .
-    [pomdp-ns1:_objects ?objectsNode] .
-    BIND(IF(?objectsNode=rdfs:nil,1.0, 0) as ?probability) .
-    
-    OPTIONAL {
-    {
-    SELECT (AVG(?prob) as ?probability) {
-    pomdp-ns:current_action rdfs:value pomdp-ns1:Action_perceive .
-    FILTER(?objectsNode!=rdfs:nil) .
-    ?objectsNode rdfs:value ?objects .
-    BIND(URI(CONCAT(str(pomdp-ns1:), CONCAT("_", CONCAT(str(?objects), "_probability")))) as ?probURI) .
-    [?probURI ?prob] .
-    }
-    }
-    }
-    
+    pomdp-ns:Observation pomdp-ns:attributes ?attributesNode .
+    ?attributesNode pomdp-ns1:_objects ?objectsNode .
+    ?attributesNode pomdp-ns1:_average_probability ?box_probability .
+    BIND(IF(?action = pomdp-ns1:Action_perceive && ?objectsNode!=rdfs:nil,?box_probability, 0.0) as ?probability) .
 }
 """
 
